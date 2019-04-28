@@ -30,12 +30,6 @@
 		#calendar {
 			width: auto;
 		}
-		#search {
-			font-size: 24px;
-			position: relative;
-			top: 2px;
-			cursor: pointer;
-		}
 		table {
 			width: calc(38px * 7 + 50px); 
 			padding: 0;
@@ -72,6 +66,19 @@
 		td:hover {
 			color: #6699FF;
 		}
+		select {
+			background-color: #c00;
+			border: none;
+			font-family: Arial;
+			color: #fff;
+			font-weight: 700;
+			font-size: 1.1em;
+			-webkit-appearance: none;
+  			-moz-appearance: none;
+  			appearance: none; 
+  			cursor: pointer;
+  			text-align: center; 
+		}
 	</style>
 </head>
 <body>
@@ -79,21 +86,8 @@
 		<div class="caption">
 			<span id="prevYear" title="предыдущий год"><a href="#"> << </a></span>
 			<span id="prevMonth" title="предыдущий месяц"><a href="#"> < </a></span>
-			<select name="y" id="year" size="1"></select>
-			<select name="m" id="month" size="1">
-				<option value="0">Январь</option>
-				<option value="1">Февраль</option>
-				<option value="2">Март</option>
-				<option value="3">Апрель</option>
-				<option value="4">Май</option>
-				<option value="5">Июнь</option>
-				<option value="6">Июль</option>
-				<option value="7">Август</option>
-				<option value="8">Сентябрь</option>
-				<option value="9">Октябрь</option>
-				<option value="10">Ноябрь</option>
-				<option value="11">Декабрь</option>
-			</select>
+			<select name="" id="year" size="1"></select>
+			<select name="" id="month" size="1"></select>
 			<span id="nextMonth" title="следующий месяц"><a href="#"> > </a></span>
 			<span id="nextYear" title="следующий год"><a href="#"> >> </a></span>
 		</div>
@@ -104,107 +98,144 @@
 
 <script>
 
+	// now it looks not so bad on the web
+	// ...but I guess that code is not optimizes enough
+	// 
+	// подробные комментарии писала для себя, чтоб потом объяснять другим... и себе дней через 5
+	
+
+
+let allMonths = {
+	0 : 'Январь',
+	1 : 'Февраль',
+	2 : 'Март',
+	3 : 'Апрель',
+	4 : 'Май',
+	5 : 'Июнь',
+	6 : 'Июль',
+	7 : 'Август',
+	8 : 'Сентябрь',
+	9 : 'Октябрь',
+	10 : 'Ноябрь',
+	11 : 'Декабрь'
+};
+
+
 const calendar 	= 	document.getElementById('calendar');
 
+//стрелки
 let prevYear 	= 	document.getElementById('prevYear');
 let prevMonth 	= 	document.getElementById('prevMonth');
 let nextMonth 	= 	document.getElementById('nextMonth');
 let nextYear 	= 	document.getElementById('nextYear');
 
+//выпадающие списки
 let YearList 	= 	document.getElementById('year');
 let MonthList 	= 	document.getElementById('month');
 
-createCalendarTable(); 
-createYearsList();
-
-var year = YearList[0].value, 
-month = MonthList[0].value;
-createCalendar(new Date(year, month));
-console.log(year);
-console.log(month);
+createCalendarTable(); 	//создание таблицы 7 х 7 (с днями недели)
 
 
+let year 	= 	new Date().getFullYear(),   // начальные значения года и месяца (текущие)
+	month 	= 	new Date().getMonth(); 		//
+
+
+createYearsList(year);		//первоначальный выпадающий список годов от 1970 до настоящего года, фокус на текущем
+createMonthList(month);		//первоначальный выпадающий список месяцев, фокус на текущем
+
+createCalendar(new Date(year, month)); //отрисовка календаря с первоначальными знчениями
+
+
+//при изменении списков изменяются значения года и месяца, календарь перерисовывается с новыми значениями
 YearList.addEventListener('change', function() {
-  var index = YearList.selectedIndex;
-  year = YearList[index].value;
-  console.log(year);
+  let index 	= YearList.selectedIndex;
+ 	  year 		= YearList[index].value;
   createCalendar(new Date(year, month));
 });
 
 MonthList.addEventListener('change', function() {
-  var index = MonthList.selectedIndex;
-  month = MonthList[index].value;
-  console.log(month);
+  let index 	= MonthList.selectedIndex;
+  	  month 	= MonthList[index].value; //! index и value одинаковы
   createCalendar(new Date(year, month));
 });
 
+
+//действия при нажатии на кнопки (вперед\назад для года и месяца)
 prevYear.addEventListener('click', function(e){
 	e.preventDefault();
-	+year--;
-	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+	year--; //сокращение значения переменной года на 1 (предыдущий год)
+	if (year < 1970) {year = new Date().getFullYear();} //...там водятся драконы! возвращаемся в мир цивилизации и прогресса 
+	YearList.length = 0; //очистка списка, чтобы в дальнейшем не дублировался
+	createYearsList(year); 	//!!! done - переделываем список с новым фокусом!!! чтобы информация в заголовке была актуальна
+	createCalendar(new Date(year, month)); //отрисовываем календарь с новыми значениями
 });
 
 prevMonth.addEventListener('click', function(e){
 	e.preventDefault();
-	+month--;
-	if (month == (-1)) { 
+	month--;
+	if (month == (-1)) { //перед январем (0 индекс) идет декабрь (индекс 11) предыдущего года
 		month = 11;
 		year--; 
 	}
-	console.log('month' + month);
-	console.log('year' + year);
-	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+	MonthList.length = 0;
+	createMonthList(month);
+	createCalendar(new Date(year, month)); 
 });
 
 nextYear.addEventListener('click', function(e){
 	e.preventDefault();
-	+year++;
-	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+	year++;
+	if (year > new Date().getFullYear()) {year = 1970;}
+	YearList.length = 0;
+	createYearsList(year);
+	createCalendar(new Date(year, month)); 
 });
 
 nextMonth.addEventListener('click', function(e){
 	e.preventDefault();
-	+month++;
+	month++;
 	if (month == 12) { 
 		month = 0;
 		year++; 
 	}
-	console.log('month' + month);
-	console.log('year' + year);
-	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+	MonthList.length = 0;
+	createMonthList(month);
+	createCalendar(new Date(year, month)); 
 });
 
 
 
 function createCalendar(date) {
-	let tdCollection = calendar.getElementsByTagName('td');
-  	let lastDayOfThisMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  	lastDayOfThisMonth = lastDayOfThisMonth.getDate();
-	
-	let lastDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth(), 0);
-  	lastDayOfPreviousMonth = lastDayOfPreviousMonth.getDate();
+	let tdCollection 			= 	calendar.getElementsByTagName('td');
+  	let lastDayOfThisMonth 		= 	new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  	lastDayOfThisMonth 			= 	lastDayOfThisMonth.getDate();
+	let lastDayOfPreviousMonth 	= 	new Date(date.getFullYear(), date.getMonth(), 0);
+  	lastDayOfPreviousMonth 		= 	lastDayOfPreviousMonth.getDate();
 
-	calendar.getElementsByClassName('other_month').className = '';
+	let dayNumber = date.getDay();
+		if (dayNumber == 0) { dayNumber = 7; } //отсчёт дней недели (для getDay()) начинается с нуля (и это воскресенье). поэтому если первый день месяца выпадает на воскресенье (индес 0 переносим его на верное место (индекс 7)
 
-	for (let i = 0; i < lastDayOfThisMonth; i++) {
-		tdCollection[date.getDay() - 1 + i].innerHTML = 1 + i; 
-		tdCollection[date.getDay() - 1 + i].className = 'curr_month';
+
+	for (let i = 0; i < lastDayOfThisMonth; i++) { 
+		tdCollection[dayNumber - 1 + i].innerHTML = 1 + i; //индексы ячеек начинаются с 0, дни - с 1... напр. dayNumber для понедельника == 1, чтобы он попал в первую ячейку с индесом 0, изначально от dayNumber отнимаем 1
+		tdCollection[dayNumber - 1 + i].className = 'curr_month';
 	}
 
-	for (let i = date.getDay() - 2; i >= 0; i--) {
+	//предыдущий месяц
+	for (let i = dayNumber - 2; i >= 0; i--) {
 		tdCollection[i].className = 'other_month';
 		tdCollection[i].innerHTML = lastDayOfPreviousMonth-- ;
 	}
 
-
-	let d = 1; //counter for the next month to fill up the calendar until that ends
-	for (let i = lastDayOfThisMonth + date.getDay() - 1; i < tdCollection.length; i++) {
+	//следующий месяц
+	let d = 1; //счетчик для заполнения ячеек следующего месяца (заполняется цифрами от 1 и далее до конца таблицы)
+	for (let i = lastDayOfThisMonth + dayNumber - 1; i < tdCollection.length; i++) {
 		tdCollection[i].className = 'other_month';
 		tdCollection[i].innerHTML = d++;
 	}
 };
 
-
+//тут все просто
 function createCalendarTable() {
 	let daysNames = ['пн','вт','ср','чт','пт','сб','вс'];
 
@@ -229,14 +260,31 @@ function createCalendarTable() {
 };
 
 
-function createYearsList() {
+//создание списков годов и месяцев
+function createYearsList(val) {
 	for (let i = 1970; i <= new Date().getFullYear(); i++) {
-		let dateY = document.createElement('option');
-		dateY.value = i;
-		dateY.innerHTML = i;
-		YearList.appendChild(dateY);
+		let year = document.createElement('option');
+		year.value = i;
+		year.innerHTML = i;
+		YearList.appendChild(year); //часть для динамической перестройки списков с выбранным значением (при переключении кнопками), которое будет отражаться в заголовке
+		if (year.value == val) {
+			year.selected = true;
+		}
 	}
 };
+
+function createMonthList(val) {
+	for (let i = 0; i < 12; i++) {
+		let month = document.createElement('option');
+		month.value = i;
+		month.innerHTML = allMonths[i];
+		MonthList.appendChild(month);
+		if (month.value == val) {
+			month.selected = true;
+		}
+	}
+};
+
 
 </script>
 
