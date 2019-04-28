@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>countVowels</title>
+</head>
+<body>
+
+<div style="margin: 50px auto; font-size: 16px; display: block; width: 200px;">Результат решения в консоли</div>
+	
+	<script>
+		
+	console.log(performance.now());
+
+	countVowelLetters ('Пришла зима, запахло…');
+	countVowelLetters ('Ghbdtn, z r dfv bp Hjccbb');
+	countVowelLetters ('длинношеее');
+
+	console.log(performance.now());
+
+	countVowelLetters1 ('Пришла зима, запахло…');
+	countVowelLetters1 ('Ghbdtn, z r dfv bp Hjccbb');
+	countVowelLetters1 ('длинношеее');
+
+	console.log(performance.now());
+
+
+
+	function countVowelLetters(string) {
+		var arrFromString = string.split('');
+		var vowels = 'а, о, и, е, ё, э, ы, у, ю, я'.toLowerCase().split(', ');
+		var arrForCount = arrFromString.filter(symbol => vowels.includes(symbol));
+		return console.log(`Количество гласных = ${arrForCount.length}`);
+	}
+
+
+
+	function countVowelLetters1(string) {		
+		var vowels = {
+			'а' : true, 'о' : true, 'и' : true, 'е' : true, 'ё' : true, 'э' : true, 'ы' : true, 'у' : true, 'ю' : true, 'я' : true
+		};
+		var sum = 0;
+		for (var i = 0; i < string.length; i++) {
+			if(string.charAt(i) in vowels) sum += 1;
+		}
+		return console.log(`Количество гласных = ${sum}`);
+	}
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>All tasks for fd2 cours</title>
+
+	<style>
+		body {
+			font-family: Arial;
+		}
+		.main-branch {
+			margin-top: 50px;
+			margin-left: 20px;
+		}
+		h1 {
+			margin-left: 20px;
+		}
+		a {
+			color: #565659;
+		}
+		a:focus {
+			color: #252323;
+		}
+		a:active {
+			color: #1D2963;
+		}
+		a:hover {
+			color: #140A73;
+		}
+		li {
+			list-style-type: none;
+		}
+	</style>
+</head>
+<body>
+	<h1>All tasks for fd2 cours</h1>
+
+	<ul class="main-branch">
+		<li><h3>lesson01 - start and functions</h3>
+			<ul>
+				<li><a href="lesson01/fizzbuzz.html">fizzBuzz</a></li>
+				<li><a href="lesson01/quadratic.html">quadratic equation</a></li>
+				<li><a href="lesson01/testEven.html">testEven</a></li>
+				<li><a href="lesson01/interview.html">interview</a></li>
+			</ul>
+		</li>
+		<li><h3>lesson02 - functions, objects</h3>
+			<ul>
+				<li><a href="lesson02/calcWithFunc.html">calcWithFunc</a></li>
+				<li><a href="lesson02/compressing.html">compressing</a></li>
+				<li><a href="lesson02/uncompressing.html">uncompressing</a></li>
+				<li><a href="lesson02/countVowels.html">countVowels</a></li>
+			</ul>
+		</li>
+		<li><h3>lesson03 - closures</h3>
+			<ul>
+				<li><a href="lesson03/pow-and-calculate.html">pow-and-calculate</a></li>
+				<li><a href="lesson03/btns.html">buttons with counter</a></li>
+			</ul>
+		</li>
+		<li><h3>lesson04 - OOP start</h3>
+			<ul>
+				<li><a href="lesson04/methods.html">string-methods</a></li>
+				<li><a href="lesson04/coctail.html">hash-storage</a></li>
+			</ul>
+		</li>
+		<li><h3>lesson05 - OOP (DOM start with calendar)</h3>
+			<ul>
+				<li><a href="lesson05/method-counter.html">method-counter</a></li>
+				<li><a href="lesson05/calendar.html">calendar</a></li>
+				<li><a href="lesson05/normalCalendarFromPlunker.html">normalCalendarFromPlunker</a></li>
+			</ul>
+		</li>
+		<li><h3>lesson06 - DOM</h3>
+			<ul>
+				<li><a href="lesson05/calendar.html">the same calendar again</a></li>
+			</ul>
+		</li>
+	</ul>
+
+
+	<script>
+
+	var linkList = document.getElementsByTagName('a');
+	
+	for(var i in linkList){
+		linkList[i].setAttribute('target', '_blank');
+	}
+
+	</script>
+</body>
+</html>

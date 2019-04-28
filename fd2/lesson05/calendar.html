@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Calendar</title>
+	<style>
+		body {
+			background: #334670;
+		}
+		#calendar {
+			width: auto;
+			margin-top: 50px;
+		}
+		table {
+			width: calc(38px * 7 + 8px); 
+			padding: 0;
+			margin: auto;
+			border: 1px solid white;
+			border-collapse: collapse;
+		}
+		th {
+			background-color: #c00;
+			color: #ffffff;
+			text-align: center;
+			text-transform: uppercase;
+			height: 40px;
+		}
+		td {
+			border: 1px solid white;
+			height: 38px;
+			text-align: center;
+			font-size: small;
+      		font-weight: bold;
+			background-color: #eeeeee;
+			color: #666666;
+			margin: 0;
+			padding: 0;
+		}
+		.other_month {
+			background-color: #ffffff;
+			color: #999999;
+		}
+		.weekend {
+			background-color: #787878;
+			color: #ffffff;
+		}
+		td:hover {
+			color: #6699FF;
+		}
+	</style>
+</head>
+<body>
+	<div id="calendar"></div>
+
+
+
+
+<script>
+
+var calendar = document.getElementById('calendar');
+createCalendarTable(); 
+
+
+
+//	let year = prompt('enter a year', '');
+//	let month = prompt('enter a month', '');
+
+var year = 2019;
+var month = 4;
+
+var date = new Date(year, month);
+var dayNumber = date.getDay();
+	
+
+
+
+ 
+createCalendar(date);
+
+
+function createCalendar(date) {
+	let tdCollection = calendar.getElementsByTagName('td');
+  	let lastDayOfThisMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  	lastDayOfThisMonth = lastDayOfThisMonth.getDate();
+	
+	let lastDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth(), 0);
+  	lastDayOfPreviousMonth = lastDayOfPreviousMonth.getDate();
+
+
+	for (let i = 0; i < lastDayOfThisMonth; i++) {
+		tdCollection[date.getDay() - 1 + i].innerHTML = 1 + i;
+	}
+
+	for (let i = date.getDay() - 2; i >= 0; i--) {
+		tdCollection[i].className = 'other_month';
+		tdCollection[i].innerHTML = lastDayOfPreviousMonth-- ;	
+	}
+
+	let d = 1; //counter for the next month to fill up the calendar until that ends
+	for (let i = lastDayOfThisMonth + date.getDay() - 1; i < tdCollection.length; i++) {
+		tdCollection[i].className = 'other_month';
+		tdCollection[i].innerHTML = d++;
+	}
+};
+
+
+function createCalendarTable() {
+	var daysNames = ['пн','вт','ср','чт','пт','сб','вс'];
+
+	var tab = document.createElement('table');
+	var tbdy = document.createElement('tbody');
+	calendar.appendChild(tab).appendChild(tbdy);
+	for (var i = 0; i < 6; i++) {
+		var tr = document.createElement('tr');
+		tbdy.appendChild(tr);
+		for (var j = 0; j < 7; j++) {
+			if (i == 0) {
+				var th = document.createElement('th');
+				tr.appendChild(th).innerHTML = daysNames[j];
+			}
+			else {
+				var td = document.createElement('td');
+				if (j == 5 || j == 6) {td.className = 'weekend';}
+				tr.appendChild(td);
+			}
+		}
+	}
+};
+
+
+</script>
+
+
+</body>
+</html>

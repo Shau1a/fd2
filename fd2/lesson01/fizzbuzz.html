@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FizzBuzz</title>
+
+	<style type="text/css" media="screen">
+		#button {
+			margin: 100px auto 0;
+			padding: 10px;
+			display: block;
+			height: 50px;
+			max-width: 200px;
+			border: 1px solid black;
+			background-color: green;
+			text-align: center;
+			font-family: Arial;
+			font-size: 18px;
+			line-height: 18px;
+			cursor: pointer;
+			transition: .4s ease-in;
+		}
+		#button:hover {
+			color: green;
+			background-color: black;
+		}
+		#result {
+			margin: 50px auto;
+			padding: 10px;
+			display: block;
+			min-height: 350px;
+			width: 100px;
+			border: 1px solid black;
+			text-align: center;
+			font-family: Arial;
+			font-size: 16px;
+			white-space: pre-wrap;
+		}		
+	</style>
+</head>
+<body>
+	<input type="button" id="button" value="Tap to fizzBuzzzzzzz">
+	<div id="result"></div>
+
+				
+	<script type="text/javascript" charset="utf-8">
+		'use strict'
+
+		const RESULT = document.getElementById('result');
+		const BUTTON = document.getElementById('button');
+		
+		BUTTON.addEventListener("click", function() {
+			if (BUTTON.value === 'Reset') {
+				RESULT.innerHTML = '';
+				BUTTON.value = 'Tap to fizzBuzzzzzzz';	
+
+			}
+
+			else {
+				RESULT.innerHTML = fizzBuzz();
+				BUTTON.value = 'Reset';
+			}
+		});
+
+		
+		function fizzBuzz() {
+			var arr = [];
+			for (var i = 0; i <= 100; i++) {
+				arr.push(!(i%15) && 'fizzbuzz' || !(i%3) && 'fizz' || !(i%5) && 'buzz' || i); 
+			}
+			return arr.join('\n');
+		}
+
+	</script>
+
+</body>
+</html>

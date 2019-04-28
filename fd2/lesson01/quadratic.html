@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Quadratic</title>
+</head>
+<body>
+	<div style="margin: 50px auto; font-size: 16px; display: block; width: 200px;">Результат решения в консоли</div>
+
+	<script type="text/javascript">
+		'use strict'
+
+		function quadraticEquation(a, b, c) {
+			if (a != 0 && !isNaN(a) && !isNaN(b) && !isNaN(c)) {
+				var d = b * b - 4 * a *c;
+				if (d < 0) {
+					return console.log(`уравнение ${a != 1 ? a : ''}x\u005E2 ${b >= 0 ? '+ ' + b : '\u2014 ' + b * -1}x + ${c} = 0 не имеет вещественных корней`); 
+				}
+				else if (d == 0) {
+					var x = -b / (2 * a);
+					return console.log(`уравнение ${a != 1 ? a : ''}x\u005E2 ${b >= 0 ? '+ ' + b : '\u2014 ' + b * -1}x + ${c} = 0 имеет один корень x = ${x}`);
+				}
+				else {
+					var x1 = (-b + Math.sqrt(d)) / (2 * a);
+					var x2 = (b + Math.sqrt(d)) / (2 * a);
+					return console.log(`уравнение ${a != 1 ? a : ''}x\u005E2 ${b >= 0 ? '+ ' + b : '\u2014 ' + b * -1}x + ${c} = 0 имеет корни x1 = ${x1} и x2 = ${x2}`);
+				}
+			}
+			return alert('Не квадратное уравнение');
+		}
+
+		quadraticEquation(1, -8, 72); 
+		quadraticEquation(1, 12, 36);
+		quadraticEquation(4, -8, 1);
+
+	</script>
+</body>
+</html>

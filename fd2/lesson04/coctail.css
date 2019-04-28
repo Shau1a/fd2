@@ -1,0 +1,28 @@
+html {
+	min-height: 100%;
+}
+body {
+	background: radial-gradient(at top, #FEFFFF, #CE9BEE, #844195);
+	font-family: 'Lora', serif;
+}
+.buttons {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 50px;
+	flex-wrap: nowrap;
+	padding-left: 10px;
+	padding-right: 10px;
+	box-sizing: border-box;
+}
+button {
+	width: calc(100% / 4 - 10px);
+	height: 50px;
+	font-size: 16px;
+}
+#outputField {
+	margin-top: 20px;
+	padding: 0 200px;
+	box-sizing: border-box;
+}

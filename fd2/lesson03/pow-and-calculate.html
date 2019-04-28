@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<div style="margin: 50px auto; font-size: 16px; display: block; width: 200px;">Результат решения в консоли</div>
+
+<script>
+
+/**
+ * функция возведения в степень с использованием рекурсии и замыкания
+ */
+	function pow(a) {
+		var a = a ? a : 1;
+ 
+		return function (b) {
+			function recursion(x, y) {
+				if (y == 0) { 
+					return 1;
+				}
+				else if (y === 1) {
+					return x;
+				}
+				return x * recursion(x, y-1);
+			};
+
+			var result = recursion(a, b); 
+			return (`Result of ${a}^${b} = ${result}`);
+		}
+	}
+	console.log("************* pow funcions ******************")
+	console.log(pow(-2)(3));
+	console.log(pow(4)(2));
+	console.log(pow(16)(0));
+		
+/**
+ * функция-калькулятор с использование замыкания и каррирования - вариант 1: объект со знаками в конечной функции, где уже определена переменная b
+ */
+
+	function calculate(a) {
+		var a = a ? a : 1;
+		return function(sign) {
+			return function(b) {
+				let obj = {
+					'+' : (a + b), 
+					'-' : (a - b), 
+					'*' : (a * b), 
+					'/' : (a / b)
+				};
+				for (var key in obj) {
+					if (sign == key) {
+						return (`Resul of ${a} ${key} ${b} = ${obj[key]}`);
+					}
+				}
+			}
+		}
+	}
+	
+	console.log('************* calc funcions *****************')
+
+	console.log(calculate(1)('+')(2));
+	console.log(calculate(3)('*')(7));
+	console.log(calculate(15)('/')(3));
+		
+/**
+ *  функция-калькулятор с использование замыкания и каррирования - вариант 2: объект со знаками и функциями исчисления к ним в функции определения знака (второй уровень)
+ */
+
+	function calculate1(a) {
+		var a = a ? a : 1;
+		return function(sign) {
+			let obj = {
+				'+' : function(x, y) { return (x + y)}, 
+				'-' : function(x, y) { return (x - y)}, 
+				'*' : function(x, y) { return (x * y)}, 
+				'/' : function(x, y) { return (x / y)}
+			};
+			return function(b) {
+				for (var key in obj) {
+					if (sign == key) {
+						return (`Resul of ${a} ${key} ${b} = ${obj[key](a, b)}`);
+					}
+				}
+			}
+		}
+	}	
+
+	console.log('************* calc1 funcions ****************')
+
+	console.log(calculate1(1)('+')(2));
+	console.log(calculate1(3)('*')(7));
+	console.log(calculate1(15)('/')(3));	
+
+	</script>
+</body>
+</html>

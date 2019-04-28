@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>uncompressing</title>
+</head>
+<body>
+	
+
+<script>
+uncomressing();
+function uncomressing() {
+	var string = prompt('enter a string', '');
+	var arr = string.split('');
+       var newArr = [];
+       for (var i = 0; i <= arr.length; i++) {
+       	var _1symb = +arr[i];
+       	var _2symb = +arr[i+1];
+       	if (isNaN(_1symb) && !isNaN(_2symb)) {
+       		newArr.push(arr[i].repeat(_2symb));
+       		i++;
+       	}
+       	if ((isNaN(_1symb) && isNaN(_2symb)) || (!isNaN(_1symb) && !isNaN(_2symb)) || (!isNaN(_1symb) && isNaN(_2symb))) {
+       		newArr.push(arr[i]);
+       	}
+       }
+       return alert(newArr.join(''));
+}
+</script>
+
+</body>
+</html>

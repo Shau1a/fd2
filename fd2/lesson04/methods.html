@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>methods</title>
+</head>
+<body>
+
+<div style="margin: 50px auto; font-size: 16px; display: block; width: 200px;">Результат решения в консоли</div>
+
+<script>
+	
+var numbers = [2, 3, 5, 7, 11, 13, 17, 19];
+function currentSums(n) {
+		
+	var arr1 = [];
+	var arr2 = [];
+	for (var i = 1; i < n.length; i++) {
+		var way = n.slice(0, i).reduce(function(a, b) {
+			return (`${a} + ${b}`);
+		});
+		arr1.push(' ' + way);
+	}				
+	for (var i = 1; i < n.length; i++) {
+		var total = n.slice(0, i).reduce(function(a, b) {
+			return a + b;
+		}, 0);
+		arr2.push(' ' + total);
+	}
+	return (`[${arr1} ] = [${arr2} ]`);
+}
+console.log('***********currentSums************');
+console.log(currentSums(numbers));
+
+
+/************************************************************************/
+
+var str = 'Каждый охотник желает знать, где сидит фазан.';
+var newArray = function firstLetter(str) {
+	var arr = str.split(' ');
+	var res = arr.map(function(word) {
+		return word.charAt(0);
+	})
+	return res;
+}
+console.log('**************string**************');
+console.log(newArray(str));
+
+/************************************************************************/
+function changeArray(arr) {
+	var center = arr.length / 2;
+	
+	if (center % 2 == 0) {
+		return (arr.slice(center).concat(arr.slice(0, center)));
+	}
+	else {
+		var center = Math.floor(center);
+		return (arr.slice(center + 1).concat(arr[center]).concat(arr.slice(0, center)));
+	}
+}
+console.log('**************task***************');
+console.log(changeArray([1, 2, 3, 4, 5]));
+console.log(changeArray([1, 2]));
+console.log(changeArray([1, 2, 3, 4, 5, 6, 7, 8]));
+console.log('**************test***************');
+var arr = [1, 2, 3, 4, 5];
+var b = changeArray(arr);
+console.log('old arr = ' + arr);
+console.log('after function arr (b) = ' + b);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link  href="btns.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/	css?family=Space+Mono" rel="stylesheet">
+
+	<title>Buttons</title>
+</head>
+<body>
+	<a href="#" class="btn btn-1" value="">0</a>
+	<a href="#" class="btn btn-2" value="">0</a>
+	<a href="#" class="btn btn-3" value="">0</a>
+	<a href="#" class="btn btn-4" value="">0</a>
+
+	<script type="text/javascript">
+		
+
+		/* коллекция элементов */
+		let btns = document.getElementsByTagName('a');
+
+		/* счетчик с замыканием */
+		function counter() {
+			var count = 0;
+			return function btnCount() {
+				return count += 1;
+			}
+		}
+
+		/* массив с экземплярами функции по количеству элементов (кнопок) */
+		var funcStorage = [];
+
+		for (let i = 0; i < btns.length; i++) {
+		  funcStorage[i] = counter(); 
+		}
+		
+		/* обработчик событик для каждого элемента (кнопки) */
+		for (let i = 0; i < btns.length; i++) {		
+			btns[i].addEventListener('click', function(e) {
+				e.preventDefault();
+				this.innerText = funcStorage[i]();
+			});	
+		}	
+		
+/*		var b0 = counter();
+		var b1 = counter();
+		var b2 = counter();
+
+		btns[0].addEventListener('click', function() {
+				this.innerText = b0();
+			});	
+		btns[1].addEventListener('click', function() {
+				this.innerText = b1();
+			});
+		btns[2].addEventListener('click', function() {
+				this.innerText = b2();
+			});	
+*/
+	
+
+	</script>
+</body>
+</html>

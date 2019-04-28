@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>testEven</title>
+	<style type="text/css" media="screen">
+		#holder {
+			margin: 50px auto;
+			display: block;
+			height: 50px;
+			width: 350px;
+			border: 1px solid black;
+			text-align: center;
+			font-family: Arial;
+			font-size: 18px;
+			line-height: 18px;
+		}
+		#enter {
+			margin: 100px auto 0;
+			padding: 10px;
+			display: block;
+			height: 50px;
+			max-width: 200px;
+			border: 1px solid black;
+			background-color: green;
+			text-align: center;
+			font-family: Arial;
+			font-size: 18px;
+			line-height: 18px;
+			cursor: pointer;
+			transition: .4s ease-in;
+		}
+		#enter:hover {
+			color: green;
+			background-color: black;
+		}
+	</style>
+</head>
+<body>
+	
+
+	<input type="button" name="" value="Tap to play" id="enter">
+
+	<input type="text" name="" value="" id="holder" readonly="readonly">	
+
+
+	<script type="text/javascript" charset="utf-8" async defer>
+		const HOLDER = document.getElementById('holder');
+		const ENTER = document.getElementById('enter');
+		
+		ENTER.onclick = function() {
+			HOLDER.value = testEven();
+		};
+
+
+		function testEven() {
+			var usersNum = prompt("enter a number", "0");
+			var arr = usersNum.split('');
+			for (var i = 0; i <= arr.length; i++) {
+				var a = arr[i];
+				var b = arr[i+1];
+					if ((a%2 == 0 || a == 0) && (b%2 == 0 || b == 0)) {
+				 		arr.splice(i+1, 0, "-");
+						i++;  
+					}
+				}
+			return arr.join('');
+		}
+	</script>
+	
+
+</body>
+</html>

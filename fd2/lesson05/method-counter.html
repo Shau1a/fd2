@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>method-counter</title>
+</head>
+<body>
+	
+<div style="margin: 50px auto; font-size: 16px; display: block; width: 200px;">Результат решения в консоли</div>
+
+	<script>
+
+'use strict';
+		
+function getCounter (num) {
+	this.sum = num || 0;
+
+
+this.log = function () {
+	console.log(this.sum); 
+	return this;
+};
+this.count = function (toIncreaseFor) {
+	this.sum += toIncreaseFor; 
+	return this;
+};
+this.reset = function() {
+	this.sum = 0;
+	return this;
+}
+};
+
+var counter = new getCounter(5);
+
+	counter.log()
+	.count(4)
+	.log()
+	.count(3)
+	.log()
+	.reset()
+	.log()
+	.count(8)
+	.log();
+
+	
+	</script>
+</body>
+</html>

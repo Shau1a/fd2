@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Interview</title>
+</head>
+<body>
+	
+
+	<script type="text/javascript">
+		
+	interview();
+
+	function interview() {
+
+	var regName = /^[а-яё][а-яё]+$/i;
+
+	var name, surname, fathersName, age;
+
+	do {
+      name = prompt('Введите Ваше имя:', '');
+      if (name === null || name == '') {      
+      	break;
+      }
+      else if (!regName.test(name)) alert('Введите верное значение!');
+  } while (!regName.test(name));
+  name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+
+  do {
+      surname = prompt('Введите Вашу фамилию:', ''); 
+      if (surname === null || surname == '') {
+    		surname = "Фамилия неизвестна";
+    		break;
+    	}
+    	else if (!regName.test(surname)) alert('Введите верное значение!'); 	
+  } while (!regName.test(surname));
+  surname = surname.charAt(0).toUpperCase() + surname.substr(1).toLowerCase();
+
+  do {
+      fathersName = prompt('Введите Ваше отчество:', '');
+      if (fathersName === null || fathersName == '') {
+    		fathersName = "Отчество неизвестно";
+    		break;
+    	}
+    	else if (!regName.test(fathersName)) alert('Введите верное значение!');   	
+  } while (!regName.test(fathersName));
+  fathersName = fathersName.charAt(0).toUpperCase() + fathersName.substr(1).toLowerCase();
+	
+  do {
+			age = +prompt('Введите Ваш возраст:', '');
+			if (age === null || age == '') {
+				age = NaN;
+				break;  
+			}
+			else if (isNaN(age)) {
+			    alert('Введите верное значение!');
+			}		
+	} while (isNaN(age) || (age < 5 || age > 100));
+        
+  var sex = confirm('Ваш пол - мужской?') ? 'мужской' : 'женский';
+
+  var result = `Ваше ФИО: ${name} ${surname} ${fathersName}
+Ваш возраст в годах: ${isNaN(age) ? "неизвестно" : age}
+Ваш возраст в днях: ${isNaN(age) ? "неизвестно" : age * 365}
+Вы ${age > 18 ? 'уже' : 'еще'} ${age > 18 ? 'совершеннолетний' : 'несовершеннолетний'}
+Ваш пол: ${sex}
+Вы на пенсии: ${age >= 60 ? 'да' : 'нет'}`;
+
+	return alert(result);
+}
+
+	</script>
+</body>
+</html>
+
