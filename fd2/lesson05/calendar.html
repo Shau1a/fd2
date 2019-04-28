@@ -7,12 +7,37 @@
 		body {
 			background: #334670;
 		}
+		.caption {
+			margin: 50px auto 0;
+			width: calc(38px * 7 + 50px);
+			text-align: center;
+			background: #c00;
+			color: #fff;
+			border: 1px solid #fff;
+			padding: 10px;
+			box-sizing: border-box;
+		}
+		.caption a {
+			color: #fff;
+			outline-style: none;
+			text-decoration: none;
+			font-size: 20px;
+			font-weight: 700;
+		}
+		.caption a:hover {
+			color: blue;
+		}
 		#calendar {
 			width: auto;
-			margin-top: 50px;
+		}
+		#search {
+			font-size: 24px;
+			position: relative;
+			top: 2px;
+			cursor: pointer;
 		}
 		table {
-			width: calc(38px * 7 + 8px); 
+			width: calc(38px * 7 + 50px); 
 			padding: 0;
 			margin: auto;
 			border: 1px solid white;
@@ -25,7 +50,11 @@
 			text-transform: uppercase;
 			height: 40px;
 		}
-		td {
+		.other_month {
+			background-color: #ffffff;
+			color: #999999;
+		}
+		td, .curr_month {
 			border: 1px solid white;
 			height: 38px;
 			text-align: center;
@@ -35,10 +64,6 @@
 			color: #666666;
 			margin: 0;
 			padding: 0;
-		}
-		.other_month {
-			background-color: #ffffff;
-			color: #999999;
 		}
 		.weekend {
 			background-color: #787878;
@@ -50,32 +75,105 @@
 	</style>
 </head>
 <body>
-	<div id="calendar"></div>
+	<div id="calendar">
+		<div class="caption">
+			<span id="prevYear" title="предыдущий год"><a href="#"> << </a></span>
+			<span id="prevMonth" title="предыдущий месяц"><a href="#"> < </a></span>
+			<select name="y" id="year" size="1"></select>
+			<select name="m" id="month" size="1">
+				<option value="0">Январь</option>
+				<option value="1">Февраль</option>
+				<option value="2">Март</option>
+				<option value="3">Апрель</option>
+				<option value="4">Май</option>
+				<option value="5">Июнь</option>
+				<option value="6">Июль</option>
+				<option value="7">Август</option>
+				<option value="8">Сентябрь</option>
+				<option value="9">Октябрь</option>
+				<option value="10">Ноябрь</option>
+				<option value="11">Декабрь</option>
+			</select>
+			<span id="nextMonth" title="следующий месяц"><a href="#"> > </a></span>
+			<span id="nextYear" title="следующий год"><a href="#"> >> </a></span>
+		</div>
+	</div>
 
 
 
 
 <script>
 
-var calendar = document.getElementById('calendar');
+const calendar 	= 	document.getElementById('calendar');
+
+let prevYear 	= 	document.getElementById('prevYear');
+let prevMonth 	= 	document.getElementById('prevMonth');
+let nextMonth 	= 	document.getElementById('nextMonth');
+let nextYear 	= 	document.getElementById('nextYear');
+
+let YearList 	= 	document.getElementById('year');
+let MonthList 	= 	document.getElementById('month');
+
 createCalendarTable(); 
+createYearsList();
+
+var year = YearList[0].value, 
+month = MonthList[0].value;
+createCalendar(new Date(year, month));
+console.log(year);
+console.log(month);
 
 
+YearList.addEventListener('change', function() {
+  var index = YearList.selectedIndex;
+  year = YearList[index].value;
+  console.log(year);
+  createCalendar(new Date(year, month));
+});
 
-//	let year = prompt('enter a year', '');
-//	let month = prompt('enter a month', '');
+MonthList.addEventListener('change', function() {
+  var index = MonthList.selectedIndex;
+  month = MonthList[index].value;
+  console.log(month);
+  createCalendar(new Date(year, month));
+});
 
-var year = 2019;
-var month = 4;
+prevYear.addEventListener('click', function(e){
+	e.preventDefault();
+	+year--;
+	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+});
 
-var date = new Date(year, month);
-var dayNumber = date.getDay();
-	
+prevMonth.addEventListener('click', function(e){
+	e.preventDefault();
+	+month--;
+	if (month == (-1)) { 
+		month = 11;
+		year--; 
+	}
+	console.log('month' + month);
+	console.log('year' + year);
+	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+});
 
+nextYear.addEventListener('click', function(e){
+	e.preventDefault();
+	+year++;
+	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+});
 
+nextMonth.addEventListener('click', function(e){
+	e.preventDefault();
+	+month++;
+	if (month == 12) { 
+		month = 0;
+		year++; 
+	}
+	console.log('month' + month);
+	console.log('year' + year);
+	createCalendar(new Date(year, month)); // сделать красиво, чтоб в выпадающем списке тоже менялось значение
+});
 
- 
-createCalendar(date);
 
 
 function createCalendar(date) {
@@ -86,15 +184,18 @@ function createCalendar(date) {
 	let lastDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth(), 0);
   	lastDayOfPreviousMonth = lastDayOfPreviousMonth.getDate();
 
+	calendar.getElementsByClassName('other_month').className = '';
 
 	for (let i = 0; i < lastDayOfThisMonth; i++) {
-		tdCollection[date.getDay() - 1 + i].innerHTML = 1 + i;
+		tdCollection[date.getDay() - 1 + i].innerHTML = 1 + i; 
+		tdCollection[date.getDay() - 1 + i].className = 'curr_month';
 	}
 
 	for (let i = date.getDay() - 2; i >= 0; i--) {
 		tdCollection[i].className = 'other_month';
-		tdCollection[i].innerHTML = lastDayOfPreviousMonth-- ;	
+		tdCollection[i].innerHTML = lastDayOfPreviousMonth-- ;
 	}
+
 
 	let d = 1; //counter for the next month to fill up the calendar until that ends
 	for (let i = lastDayOfThisMonth + date.getDay() - 1; i < tdCollection.length; i++) {
@@ -105,21 +206,21 @@ function createCalendar(date) {
 
 
 function createCalendarTable() {
-	var daysNames = ['пн','вт','ср','чт','пт','сб','вс'];
+	let daysNames = ['пн','вт','ср','чт','пт','сб','вс'];
 
-	var tab = document.createElement('table');
-	var tbdy = document.createElement('tbody');
+	let tab = document.createElement('table');
+	let tbdy = document.createElement('tbody');
 	calendar.appendChild(tab).appendChild(tbdy);
-	for (var i = 0; i < 6; i++) {
-		var tr = document.createElement('tr');
+	for (let i = 0; i < 7; i++) {
+		let tr = document.createElement('tr');
 		tbdy.appendChild(tr);
-		for (var j = 0; j < 7; j++) {
+		for (let j = 0; j < 7; j++) {
 			if (i == 0) {
-				var th = document.createElement('th');
+				let th = document.createElement('th');
 				tr.appendChild(th).innerHTML = daysNames[j];
 			}
 			else {
-				var td = document.createElement('td');
+				let td = document.createElement('td');
 				if (j == 5 || j == 6) {td.className = 'weekend';}
 				tr.appendChild(td);
 			}
@@ -127,6 +228,15 @@ function createCalendarTable() {
 	}
 };
 
+
+function createYearsList() {
+	for (let i = 1970; i <= new Date().getFullYear(); i++) {
+		let dateY = document.createElement('option');
+		dateY.value = i;
+		dateY.innerHTML = i;
+		YearList.appendChild(dateY);
+	}
+};
 
 </script>
 
