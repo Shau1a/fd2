@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>editable-list</title>
+	<link href="https://fonts.googleapis.com/css?family=Marmelad&amp;subset=cyrillic" rel="stylesheet">
+	<style>
+		html {
+			min-height: 100%;
+		}
+		body {
+			font-family: 'Marmelad', sans-serif;
+			background: radial-gradient(at top, #E1F4E3, #6EA459);
+		}
+		.hidden {
+			visibility: hidden;
+		}
+		h1 {
+			padding-left: 20px;
+		}
+		ol {
+			color: #000;
+		}
+		li {
+			width: 200px;
+		}
+		#container a {
+			text-decoration: none;
+		}
+		#container a:visited, #container a:active {
+			color: #000;
+		}
+		#container a:hover {
+			border-bottom: 1px solid gray;
+		}
+		#txtField, #buttonAdd, #buttonDelete {
+			position: fixed;
+			display: block;
+			top: 140px;
+			left: 300px;
+		}
+		#buttonAdd {
+			top: 180px;
+		}
+		#buttonDelete {
+			top: 220px;
+		}
+
+	</style>
+</head>
+<body>
+	<h1>Editable list</h1>
+
+	<div id="container">
+		<input type="text" value="" id="txtField">
+		<input type="button" value="check the form above and add value to the list" id="buttonAdd">
+		<input type="button" value="delete the last item in the list" id="buttonDelete">
+	</div>
+
+	<script>
+		const container		= 	document.getElementById('container');
+		const txtField 		= 	document.getElementById('txtField');
+		const buttonAdd 	= 	document.getElementById('buttonAdd');
+		const buttonDelete 	= 	document.getElementById('buttonDelete');
+
+		txtField.style.cssText 		= 	'width: 300px; overflow: hidden; padding: 3px; box-sizing:border-box;';
+		buttonAdd.style.cssText 	= 	'min-width: 300px; padding: 3px;';
+		buttonDelete.style.cssText 	= 	'min-width: 300px; padding: 3px;';
+
+		let str 	= 	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam placeat, eum!"
+		let arr 	= 	str.split(' ');
+		let ol 		= 	document.createElement('ol');
+		let list 	= 	container.insertBefore(ol, txtField);
+
+		
+		for (let i = 0; i < arr.length; i++) {
+			creatingLi(arr[i]);
+		};
+
+		list.style.cssText = 'padding-left: 100px;';
+
+		buttonAdd.addEventListener('click', function(){
+			if (txtField.value != '') {
+				creatingLi(txtField.value);
+				txtField.value = '';
+				buttonDelete.removeAttribute('disabled');
+			}
+		});
+
+		buttonDelete.addEventListener('click', function(){
+			list.removeChild(list.lastChild);
+			if (!list.lastChild) {
+				buttonDelete.disabled = true;
+			}
+		});
+
+		let a = list.getElementsByTagName('a');
+		let int = list.getElementsByTagName('input');
+
+		for (let i = 0; i < a.length; i++) {
+			a[i].addEventListener('focus', function(e) {
+				e.preventDefault();
+				a[i].blur();
+				int[i].focus();
+				int[i].classList.remove('hidden');
+			}, true);
+
+			int[i].addEventListener('blur', function(e) {
+				e.preventDefault();
+				if (int[i].value !== '') {
+					a[i].innerHTML = int[i].value;
+				}
+			    int[i].classList.add('hidden');
+			}, true);
+		};
+		
+		function creatingLi(i) {
+			let	li 	 = document.createElement('li');
+			let a = document.createElement('a');
+			let	inpt = document.createElement('input');
+			a.href = "#";
+			a.title ='tap to change';
+			a.innerHTML = i;
+			inpt.value = i;
+			list.appendChild(li).appendChild(a);
+			li.appendChild(inpt);
+			li.style.cssText = 'position: relative';
+			inpt.style.cssText = 'position: absolute; left: 0;';
+			inpt.className = 'hidden';
+		};
+
+	</script>
+</body>
+</html>
