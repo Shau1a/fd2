@@ -44,10 +44,6 @@
 			text-transform: uppercase;
 			height: 40px;
 		}
-		.other_month {
-			background-color: #ffffff;
-			color: #999999;
-		}
 		td, .curr_month {
 			border: 1px solid white;
 			height: 38px;
@@ -60,8 +56,12 @@
 			padding: 0;
 		}
 		.weekend {
-			background-color: #787878;
+			background: rgba(120, 120, 120, 1);
 			color: #ffffff;
+		}
+		.other_month {
+			background-color: #ffffff;
+			color: #999999;
 		}
 		td:hover {
 			color: #6699FF;
@@ -102,12 +102,6 @@
 
 
 <script>
-
-	// now it looks not so bad on the web
-	// ...but I guess that code is not optimizes enough
-	// 
-	// подробные комментарии писала для себя, чтоб потом объяснять другим... и себе дней через 5
-	
 
 
 let allMonths = {
@@ -223,19 +217,22 @@ function createCalendar(date) {
 
 	for (let i = 0; i < lastDayOfThisMonth; i++) { 
 		tdCollection[dayNumber - 1 + i].innerHTML = 1 + i; //индексы ячеек начинаются с 0, дни - с 1... напр. dayNumber для понедельника == 1, чтобы он попал в первую ячейку с индесом 0, изначально от dayNumber отнимаем 1
-		tdCollection[dayNumber - 1 + i].className = 'curr_month';
+		tdCollection[dayNumber - 1 + i].classList.remove('other_month');
+		tdCollection[dayNumber - 1 + i].classList.add('curr_month');
 	}
 
 	//предыдущий месяц
 	for (let i = dayNumber - 2; i >= 0; i--) {
-		tdCollection[i].className = 'other_month';
+		tdCollection[i].classList.remove('curr_month');
+		tdCollection[i].classList.add('other_month');
 		tdCollection[i].innerHTML = lastDayOfPreviousMonth-- ;
 	}
 
 	//следующий месяц
 	let d = 1; //счетчик для заполнения ячеек следующего месяца (заполняется цифрами от 1 и далее до конца таблицы)
 	for (let i = lastDayOfThisMonth + dayNumber - 1; i < tdCollection.length; i++) {
-		tdCollection[i].className = 'other_month';
+		tdCollection[i].classList.remove('curr_month');
+		tdCollection[i].classList.add('other_month');
 		tdCollection[i].innerHTML = d++;
 	}
 };
@@ -257,7 +254,9 @@ function createCalendarTable() {
 			}
 			else {
 				let td = document.createElement('td');
-				if (j == 5 || j == 6) {td.className = 'weekend';}
+				if (j == 5 || j == 6) {
+					td.className = 'weekend';
+				}
 				tr.appendChild(td);
 			}
 		}

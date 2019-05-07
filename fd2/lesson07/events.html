@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>events</title>
+	<style>
+		body {
+			padding: 20px;
+		}
+		#wrapper1 a {
+			display: block;
+			width: auto;
+			max-width: 500px;
+			padding: 5px 0;
+			color: #000;
+		}
+		#wrapper1 a:hover {
+			color: red;
+		}
+		#wrapper2 input {
+			cursor: pointer;
+		}
+		#wrapper3 p {
+			margin-left: 40px;
+			padding: 2px 10px;
+			font-size: 20px;
+			cursor: pointer;
+			min-width: 20px;
+			max-width: 240px;
+			border: 1px solid #000;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<h2>1</h2>
+	<div id="wrapper1">
+	<div class="desription">Сверстайте 3-5 любых ссылок с title и href и привяжите всем ссылкам событие - по наведению на ссылку в конец ее текста дописывается ее значение href в круглых скобках, а текст ссылки заменяется на значение атрибута title, после этого отвязать
+данное событие.</div>
+	
+	<a href="https://shau1a.github.io/fd2/fd2/lesson06/editable-list.html" title="Editable list">Читать далее</a>
+	<a href="https://shau1a.github.io/fd2/fd2/lesson05/calendar.html" title="Calendar">Смотреть далее</a>
+	<a href="https://shau1a.github.io/fd2/fd2/lesson04/coctail.html" title="Hash Storage">Открывай, не бойся</a>
+	<a href="https://shau1a.github.io/fd2/fd2/lesson03/btns.html" title="Buttons with counter">Тут тоже есть, что посмотреть</a>
+	
+	</div>
+
+	<h2>2</h2>
+	<div id="wrapper2">	
+	<div class="desription">Сверстайте 3-5 текстовых инпутов и сделайте так, чтобы они выводили свой value в консоль при нажатии на любой из них, но только по первому нажатию. Повторное нажатие на инпут не должно вызывать никакой нестандартной реакции.</div>
+	
+	<input type="text" readonly value="Lorem">
+	<input type="text" readonly value="ipsum">
+	<input type="text" readonly value="dolor">
+	<input type="text" readonly value="sit">
+	<input type="text" readonly value="atmen?">
+
+	</div>
+
+	<h2>3</h2>
+	<div id="wrapper3">
+	<div class="desription">Сверстать 3-5 абзацев, в которых будут числа и по нажатию на абзац в нем должен появиться квадрат числа, которое он содержит. Срабатывать событие должно единожды.</div>
+	
+	<p>2</p>
+	<p>4</p>
+	<p>5</p>
+	<p>6</p>
+	<p>7</p>
+
+	</div>
+
+	<h2>4</h2>
+	<div id="wrapper4">
+	<div class="desription">Сверстать 3-5 текстовых инпутов. Сделайте так, чтобы все инпуты при потере фокуса проверяли свое содержимое на
+правильное количество символов. Сколько символов должно быть в инпуте, указывается в атрибуте data-length. Если вбито правильное количество, то бордер (граница) инпута становится зеленой, если неправильное - красной.</div>
+
+	<input type="text" data-length="5" placeholder="Введите 5 символов" value="fdhgj">
+	<input type="text" data-length="8" placeholder="Введите 8 символов" value="">
+	<input type="text" data-length="3" placeholder="Введите 3 символа" value="">
+	<input type="text" data-length="2" placeholder="Введите 2 символа" value="23">
+
+	</div>
+
+<script>
+	//*********** 1 ***************
+	//
+	const wrapper1 = document.getElementById('wrapper1');
+	let linkCollection = wrapper1.getElementsByTagName('a');
+
+
+	function showAll() {
+		this.innerHTML = this.title + ' ' +'('+ this.href +');';
+//		this.removeEventListener('mouseover', showAll);
+	};
+
+	function returntToFirstText() {
+		for (let i = 0; i < linkCollection.length; i++) {
+			linkCollection[i].innerHTML = arr[i];
+		}
+//		this.removeEventListener('mouseout', returntToFirstText);
+	};
+
+	let arr = [];
+	for (let i = 0; i < linkCollection.length; i++) {
+		arr.push(linkCollection[i].innerHTML);
+		linkCollection[i].target = '_blank';
+		linkCollection[i].addEventListener('mouseover', showAll); //mouseenter сработало бы 1 раз
+		linkCollection[i].addEventListener('mouseout', returntToFirstText);
+	};
+
+	//*********** 2 ***************
+	//
+	const wrapper2 = document.getElementById('wrapper2');
+	let inputCollection = wrapper2.getElementsByTagName('input');
+
+	for (let i = 0; i < inputCollection.length; i++) {
+		inputCollection[i].onclick = function() {
+		console.log(inputCollection[i].value);
+		inputCollection[i].onclick = null;
+		}
+	};
+
+	//*********** 3 ***************
+	//
+	const wrapper3 = document.getElementById('wrapper3');
+	let pCollection = wrapper3.getElementsByTagName('p');
+
+	for (var i = 0; i < pCollection.length; i++) {
+		pCollection[i].onclick = function() {
+			let num = this.innerHTML;
+			this.innerHTML = `Квадрат числа ${num} = ${num * num}`;
+			this.onclick = null;
+		}
+	}
+
+	//*********** 4 ***************
+	//
+	const wrapper4 = document.getElementById('wrapper4');
+	let inpt4Collection = wrapper4.getElementsByTagName('input');
+
+	for (let i = 0; i < inpt4Collection.length; i++) {
+		inpt4Collection[i].addEventListener('blur', function(){
+			let a = this.getAttribute('data-length');
+			if (this.value.length == a) {
+				this.style.cssText = 'border: 1px solid green;';
+			}
+			else this.style.cssText = 'border: 1px solid red;'; 
+		});
+	};
+
+
+</script>
+</body>
+</html>

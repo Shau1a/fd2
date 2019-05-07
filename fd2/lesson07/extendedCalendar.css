@@ -1,0 +1,109 @@
+body {
+	background: #334670;
+}
+#mainTitle {
+	margin: 50px auto;
+	width: 60%;
+	text-align: center;
+	background: #c00;
+	color: #fff;
+	border: 1px solid #fff;
+	padding: 10px;
+	box-sizing: border-box;
+}
+#mainTitle a {
+	color: #fff;
+	outline-style: none;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: 700;
+	padding: 0 10px;
+}
+#mainTitle a:hover {
+	color: blue;
+}
+#calendar {
+	width: auto;
+}
+table {
+	width: calc(38px * 7 + 50px); 
+	padding: 0;
+	margin: 10px;
+	border: 1px solid #757070;
+	border-collapse: collapse;
+	background: #eeeeee;
+}
+th, caption {
+	background-color: #c00;
+	color: #ffffff;
+	text-align: center;
+	text-transform: uppercase;
+	height: 40px;
+}
+caption {
+  	font-size: 18px;
+  	padding-top: 10px;
+  	box-sizing: border-box;
+}
+td, .curr_month {
+	border: 1px solid #757070;
+	height: 38px;
+	text-align: center;
+	font-size: small;
+    font-weight: bold;
+	background-color: #eeeeee;
+	color: #666666;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+}
+.weekend {
+	background: rgba(120, 120, 120, .5);
+	color: #ffffff;
+}
+.other_month {
+	background-color: #ffffff;
+	color: #999999;
+}
+td:hover {
+	color: #6699FF;
+}
+select {
+	background-color: #c00;
+	border: none;
+	font-family: Arial;
+	color: #fff;
+	font-weight: 700;
+	font-size: 1.1em;
+	-webkit-appearance: none;
+  	-moz-appearance: none;
+  	appearance: none; 
+  	cursor: pointer;
+  	text-align: center; 
+  	box-sizing: border-box;
+}
+select:hover {
+	border: 1px solid #fff;
+}
+#creatingACalendar, #deletingACalendar {
+	display: inline-block;
+	margin: 4px auto 0;
+	background: #c00;
+	font-weight: 600;
+	color: #fff;
+	padding: 2px;
+	transition: 1s;
+}
+#creatingACalendar:disabled, #deletingACalendar:disabled {
+	background: #AC7979;
+}
+#calendarsWrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+.highlight {
+	background: red;
+	color: #fff;
+}

@@ -25,7 +25,6 @@
 			width: 200px;
 		}
 		#container a {
-			color: #000;
 			text-decoration: none;
 		}
 		#container a:visited, #container a:active {
@@ -79,6 +78,7 @@
 		};
 
 		list.style.cssText = 'padding-left: 100px;';
+	
 
 		buttonAdd.addEventListener('click', function(){
 			if (txtField.value != '') {
@@ -95,26 +95,27 @@
 			}
 		});
 
-		let a = list.getElementsByTagName('a');
-		let int = list.getElementsByTagName('input');
 
-		for (let i = 0; i < a.length; i++) {
-			a[i].addEventListener('focus', function(e) {
+		
+		function refreshCollections(a, inpt) {
+			a.addEventListener('focus', function(e) {
 				e.preventDefault();
-				a[i].blur();
-				int[i].focus();
-				int[i].classList.remove('hidden');
+				a.blur();
+				inpt.focus();
+				inpt.classList.remove('hidden');
 			}, true);
 
-			int[i].addEventListener('blur', function(e) {
+			inpt.addEventListener('blur', function(e) {
 				e.preventDefault();
-				if (int[i].value !== '') {
-					a[i].innerHTML = int[i].value;
+				if (inpt.value !== '') {
+					a.innerHTML = inpt.value;
 				}
-			    int[i].classList.add('hidden');
+			    inpt.classList.add('hidden');
 			}, true);
 		};
+	
 		
+
 		function creatingLi(i) {
 			let	li 	 = document.createElement('li');
 			let a = document.createElement('a');
@@ -125,6 +126,7 @@
 			inpt.value = i;
 			list.appendChild(li).appendChild(a);
 			li.appendChild(inpt);
+			refreshCollections(a, inpt);
 			li.style.cssText = 'position: relative';
 			inpt.style.cssText = 'position: absolute; left: 0;';
 			inpt.className = 'hidden';
