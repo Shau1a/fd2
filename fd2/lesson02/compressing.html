@@ -6,39 +6,32 @@
 </head>
 <body>
     
-    <script type="text/javascript">
-
-        compressing(); 
-
-        function compressing() {
-            var string = prompt('enter a string', 'aaa');
-            var arr = string.split('');
-            var newArr = [];
-            var midRes = arr[0];
-            var count = 0;
-            if (arr.length == 1) {
-                return alert(string);
-            }
-            for (var i = 0; i <= arr.length; i++) {
-                
-                if (arr[i] == midRes) {
-                    ++count;
-                    continue;
-                }
-
-                else {
-                    newArr.push(midRes);
-                    newArr.push(count);
-
-                    midRes = arr[i];
-                    count = 1;
-                }
-            }
-            return alert(newArr.join(''));
-        }
-
-    </script>
-
-
+  <script type="text/javascript">
+      compressing(); 
+      function compressing() {
+          var string = prompt('enter a string', 'aaa');
+          var arr = string.split('');
+          var newArr = [];
+          var midRes = arr[0];
+          var count = 0;
+          if (arr.length == 1) {
+              return alert(string);
+          }
+          for (var i = 0; i <= arr.length; i++) {
+              
+              if (arr[i] == midRes) {
+                  ++count;
+                  continue;
+              }
+              else {
+                  newArr.push(midRes);
+                  newArr.push(count);
+                  midRes = arr[i];
+                  count = 1;
+              }
+          }
+          return alert(newArr.join(''));
+      }
+  </script>
 </body>
 </html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>clock on canvas</title>
+	<style>
+		#canvas-container {
+			text-align: center;
+			margin-top: 20px;
+		}
+		#CanvasClock {
+			display: inline-block;
+			border: 1px solid rgba(120, 120, 120, .8);
+		}
+	</style>
+</head>
+<body>
+	<div id="canvas-container">
+		<canvas id="CanvasClock" width="400" height="400">Извините, ваш браузер не поддерживает тег canvas</canvas>
+	</div>
+
+<script>
+		
+let canvas = document.getElementById('CanvasClock');
+let ctx = canvas.getContext('2d');
+let hours, min, sec, runningTime;
+
+
+update();
+init();
+
+
+function init() {
+	clear();
+	createFace(); 
+	createRunningTime();
+	createArrows();
+	setTimeout(init, 1000); 
+};
+
+function createFace() {
+
+	ctx.beginPath();
+	ctx.fillStyle = '#F1ECE0';
+	ctx.arc(200, 200, 200, 0, Math.PI*2, true);
+	ctx.fill();
+
+	ctx.beginPath();
+	let delta = Math.PI * 2 / 12; 
+	let angle = 0;
+	let h = 3;
+
+	for (let i = 0; i < 12; i++) {		
+		x = 200 + 150 * Math.cos(angle);
+	    y = 200 + 150 * Math.sin(angle);
+		
+		ctx.beginPath();
+		ctx.fillStyle = '#d41a1a';
+	    ctx.arc(x, y, 23, 0, Math.PI*2, true);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.fillStyle = '#fff';    
+		ctx.font = '800 16px Arial';
+		if (h < 10) {
+			ctx.fillText(h, x - 5, y + 5);
+		}
+
+		if (h >= 10) {
+			ctx.fillText(h, x - 10, y + 5);
+		}
+
+	    angle += delta;
+	    h++;
+		if (h > 12) h = 1;
+	}
+};
+
+function createRunningTime() {
+	ctx.beginPath();
+	ctx.fillStyle = '#d41a1a';    
+	ctx.font = '700 16px Arial';
+	ctx.fillText(runningTime, canvas.width / 2 - 80, canvas.height / 2 - 50);
+};
+
+function createArrows() {
+	let x1 = canvas.width / 2;
+	let y1 = canvas.height / 2;
+
+	let secAngle = 6 * sec;
+	let minAngle = 6 * (min + 1 / 60 * sec);
+	let hrAngle = 30 * (hours + 1 / 60 * min);
+
+	ctx.beginPath();
+	ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+	ctx.translate(x1 - ctx.lineWidth / 2, y1);
+	ctx.rotate(secAngle * Math.PI / 180 + Math.PI);
+	ctx.moveTo(0, 0);
+    ctx.lineTo(0, 140);
+    ctx.strokeStyle = '#F84949';
+    ctx.stroke();
+    ctx.resetTransform();
+    ctx.closePath();
+
+    ctx.beginPath();
+	ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+	ctx.translate(x1 - ctx.lineWidth / 2, y1);
+	ctx.rotate(minAngle * Math.PI / 180 + Math.PI);
+	ctx.moveTo(0, 0);
+    ctx.lineTo(0, 130);
+    ctx.strokeStyle = '#383535';
+    ctx.stroke();
+    ctx.resetTransform();
+    ctx.closePath();
+
+    ctx.beginPath();
+	ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+	ctx.translate(x1 - ctx.lineWidth / 2, y1);
+	ctx.rotate(hrAngle * Math.PI / 180 + Math.PI);
+	ctx.moveTo(0, 0);
+    ctx.lineTo(0, 80);
+    ctx.strokeStyle = '#383535';
+    ctx.stroke();
+    ctx.resetTransform();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.fillStyle = '#F84949';
+    ctx.arc(x1, y1, 10, 0, Math.PI*2, true);
+	ctx.fill();
+
+	ctx.beginPath();
+    ctx.strokeStyle = '#000';
+    ctx.arc(x1, y1, 1, 0, Math.PI*2, true);
+	ctx.stroke();
+};
+
+function clear() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+function update() {
+	let d = new Date(); 
+	hours = d.getHours();
+	min = d.getMinutes(); 
+	sec = d.getSeconds();
+	runningTime = d.toLocaleString();
+	setTimeout(update, 1000);
+};
+	</script>
+</body>
+</html>

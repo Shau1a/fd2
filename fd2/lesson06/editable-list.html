@@ -48,90 +48,78 @@
 
 	</style>
 </head>
+
 <body>
-	<h1>Editable list</h1>
-
-	<div id="container">
-		<input type="text" value="" id="txtField">
-		<input type="button" value="check the form above and add value to the list" id="buttonAdd">
-		<input type="button" value="delete the last item in the list" id="buttonDelete">
-	</div>
-
-	<script>
-		const container		= 	document.getElementById('container');
-		const txtField 		= 	document.getElementById('txtField');
-		const buttonAdd 	= 	document.getElementById('buttonAdd');
-		const buttonDelete 	= 	document.getElementById('buttonDelete');
-
-		txtField.style.cssText 		= 	'width: 300px; overflow: hidden; padding: 3px; box-sizing:border-box;';
-		buttonAdd.style.cssText 	= 	'min-width: 300px; padding: 3px;';
-		buttonDelete.style.cssText 	= 	'min-width: 300px; padding: 3px;';
-
-		let str 	= 	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam placeat, eum!"
-		let arr 	= 	str.split(' ');
-		let ol 		= 	document.createElement('ol');
-		let list 	= 	container.insertBefore(ol, txtField);
-
-		
-		for (let i = 0; i < arr.length; i++) {
-			creatingLi(arr[i]);
-		};
-
-		list.style.cssText = 'padding-left: 100px;';
+<h1>Editable list</h1>
+<div id="container">
+	<input type="text" value="" id="txtField">
+	<input type="button" value="check the form above and add value to the list" id="buttonAdd">
+	<input type="button" value="delete the last item in the list" id="buttonDelete">
+</div>
+<script>
+	const container		= 	document.getElementById('container');
+	const txtField 		= 	document.getElementById('txtField');
+	const buttonAdd 	= 	document.getElementById('buttonAdd');
+	const buttonDelete 	= 	document.getElementById('buttonDelete');
+	txtField.style.cssText 		= 	'width: 300px; overflow: hidden; padding: 3px; box-sizing:border-box;';
+	buttonAdd.style.cssText 	= 	'min-width: 300px; padding: 3px;';
+	buttonDelete.style.cssText 	= 	'min-width: 300px; padding: 3px;';
+	let str 	= 	"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam placeat, eum!"
+	let arr 	= 	str.split(' ');
+	let ol 		= 	document.createElement('ol');
+	let list 	= 	container.insertBefore(ol, txtField);
 	
+	for (let i = 0; i < arr.length; i++) {
+		creatingLi(arr[i]);
+	};
+	list.style.cssText = 'padding-left: 100px;';
 
-		buttonAdd.addEventListener('click', function(){
-			if (txtField.value != '') {
-				creatingLi(txtField.value);
-				txtField.value = '';
-				buttonDelete.removeAttribute('disabled');
-			}
-		});
-
-		buttonDelete.addEventListener('click', function(){
-			list.removeChild(list.lastChild);
-			if (!list.lastChild) {
-				buttonDelete.disabled = true;
-			}
-		});
-
-
-		
-		function refreshCollections(a, inpt) {
-			a.addEventListener('focus', function(e) {
-				e.preventDefault();
-				a.blur();
-				inpt.focus();
-				inpt.classList.remove('hidden');
-			}, true);
-
-			inpt.addEventListener('blur', function(e) {
-				e.preventDefault();
-				if (inpt.value !== '') {
-					a.innerHTML = inpt.value;
-				}
-			    inpt.classList.add('hidden');
-			}, true);
-		};
+	buttonAdd.addEventListener('click', function(){
+		if (txtField.value != '') {
+			creatingLi(txtField.value);
+			txtField.value = '';
+			buttonDelete.removeAttribute('disabled');
+		}
+	});
+	buttonDelete.addEventListener('click', function(){
+		list.removeChild(list.lastChild);
+		if (!list.lastChild) {
+			buttonDelete.disabled = true;
+		}
+	});
 	
-		
+	function refreshCollections(a, inpt) {
+		a.addEventListener('focus', function(e) {
+			e.preventDefault();
+			a.blur();
+			inpt.focus(); //не работает нормально в хроме
+			inpt.classList.remove('hidden');
+		}, true);
+		inpt.addEventListener('blur', function(e) {
+			e.preventDefault();
+			if (inpt.value !== '') {
+				a.innerHTML = inpt.value;
+			}
+		    inpt.classList.add('hidden');
+		}, true);
+	};
 
-		function creatingLi(i) {
-			let	li 	 = document.createElement('li');
-			let a = document.createElement('a');
-			let	inpt = document.createElement('input');
-			a.href = "#";
-			a.title ='tap to change';
-			a.innerHTML = i;
-			inpt.value = i;
-			list.appendChild(li).appendChild(a);
-			li.appendChild(inpt);
-			refreshCollections(a, inpt);
-			li.style.cssText = 'position: relative';
-			inpt.style.cssText = 'position: absolute; left: 0;';
-			inpt.className = 'hidden';
-		};
-
-	</script>
+	
+	function creatingLi(i) {
+		let	li 	 = document.createElement('li');
+		let a = document.createElement('a');
+		let	inpt = document.createElement('input');
+		a.href = "#";
+		a.title ='tap to change';
+		a.innerHTML = i;
+		inpt.value = i;
+		list.appendChild(li).appendChild(a);
+		li.appendChild(inpt);
+		refreshCollections(a, inpt);
+		li.style.cssText = 'position: relative';
+		inpt.style.cssText = 'position: absolute; left: 0;';
+		inpt.className = 'hidden';
+	};
+</script>
 </body>
 </html>

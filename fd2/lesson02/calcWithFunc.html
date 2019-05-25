@@ -10,134 +10,206 @@
 	
 	<script>
 	
-// очередной монстр  Франкенштейна
-// нормальное решение: https://gist.github.com/jamigibbs/adafd95cf738fa872bda
 
-	const zero = (sign) => {
-		if (sign) {
-			var a = 0;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 0${sign} = ${x}`); 
-			return res;
-		}
-		return 0;
+//  https://gist.github.com/jamigibbs/adafd95cf738fa872bda
+
+function makeNum(num, func) {
+  if (func === undefined) {
+		return num;
+	} else {
+		return func(num);
 	}
-	const one = (sign) => {
-		if (sign) {
-			var a = 1;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 1${sign} = ${x}`); 
-			return res;
-		}
-		return 1;
-	}
-	const two = (sign) => {
-		if (sign) {
-			var a = 2;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 2${sign} = ${x}`); 
-			return res;
-		}
-		return 2;
-	}
-	const three = (sign) => {
-		if (sign) {
-			var a = 3;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 3${sign} = ${x}`); 
-			return res;
-		}
-		return 3;
-	}
-	const four = (sign) => {
-		if (sign) {
-			var a = 4;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 4${sign} = ${x}`); 
-			return res;
-		}
-		return 4;
-	}
-	const five = (sign) => {
-		if (sign) {
-			var a = 5;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 5${sign} = ${x}`); 
-			return res;
-		}
-		return 5;
-	}
-	const six = (sign) => {
-		if (sign) {
-			var a = 6;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 6${sign} = ${x}`); 
-			return res;
-		}
-		return 6;
-	}
-	const seven = (sign) => {
-		if (sign) {
-			var a = 7;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 7${sign} = ${x}`); 
-			return res;
-		}
-		return 7;
-	}
-	const eight = (sign) => {
-		if (sign) {
-			var a = 8;
-			var arr = sign.trim().split('');
-			arr.unshift(a);
-			var x = eval(arr.join(''));
-			var res = console.log(`Result is: 8${sign} = ${x}`); 
-			return res;
-		}
-		return 8;
-	}
-	const nine = (sign) => {
-		if (sign) {
-			var a = 9;
-			var arr = sign.trim().split(''); //["*", "b"]
-			arr.unshift(a);
-			var x = eval(arr.join('')); //["a", "*", "b"]
-			var res = console.log(`Result is: 9${sign} = ${x}`); 
-			return res;
-		}
-		return 9;
-	}
+}
+
+function zero(func) {
+	return makeNum(0,func);
+}
+function one(func) {
+	return makeNum(1,func);
+}
+function two(func) {
+	return makeNum(2,func);
+}
+function three(func) {
+	return makeNum(3,func);
+}
+function four(func) {
+	return makeNum(4,func);
+}
+function five(func) {
+	return makeNum(5,func);
+}
+function six(func) {
+	return makeNum(6,func);
+}
+function seven(func) {
+	return makeNum(7,func);
+}
+function eight(func) {
+	return makeNum(8,func);
+}
+function nine(func) {
+	return makeNum(9,func);
+}
+
+function plus(right) {
+  return function(left) { return left + right; };
+}
+function minus(right) {
+  return function(left) {
+		return left - right;
+	};
+}
+function times(right) {
+  return function(left) { return left * right; };
+}
+function dividedBy(right) {
+  return function(left) { return left / right; };
+}
+
+eight(minus(three())); // return 5
+six(dividedBy(two())); // return 3
+two(plus(five())); // return 7
+five(plus(two())); // return 7
+seven(times(five())); // return 35
+console.log(four(plus(nine()))); // must return 13
 
 
-	const _plus = (b) => (` + ${b}`);
-	const _minus = (b) => (` - ${b}`);
-	const times = (b) => (` * ${b}`);
-	const dividedBy = (b) => (` / ${b}`);
 
 
-	seven(times(five()));
-	four(_plus(nine()));
-	eight(_minus(three()));
-	six(dividedBy(two()));
 
-	</script>
 
+
+
+
+
+
+
+
+// very bad solution
+
+
+const zero = (sign) => {
+	if (sign) {
+		var a = 0;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 0${sign} = ${x}`); 
+		return res;
+	}
+	return 0;
+}
+const one = (sign) => {
+	if (sign) {
+		var a = 1;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 1${sign} = ${x}`); 
+		return res;
+	}
+	return 1;
+}
+const two = (sign) => {
+	if (sign) {
+		var a = 2;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 2${sign} = ${x}`); 
+		return res;
+	}
+	return 2;
+}
+const three = (sign) => {
+	if (sign) {
+		var a = 3;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 3${sign} = ${x}`); 
+		return res;
+	}
+	return 3;
+}
+const four = (sign) => {
+	if (sign) {
+		var a = 4;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 4${sign} = ${x}`); 
+		return res;
+	}
+	return 4;
+}
+const five = (sign) => {
+	if (sign) {
+		var a = 5;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 5${sign} = ${x}`); 
+		return res;
+	}
+	return 5;
+}
+const six = (sign) => {
+	if (sign) {
+		var a = 6;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 6${sign} = ${x}`); 
+		return res;
+	}
+	return 6;
+}
+const seven = (sign) => {
+	if (sign) {
+		var a = 7;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 7${sign} = ${x}`); 
+		return res;
+	}
+	return 7;
+}
+const eight = (sign) => {
+	if (sign) {
+		var a = 8;
+		var arr = sign.trim().split('');
+		arr.unshift(a);
+		var x = eval(arr.join(''));
+		var res = console.log(`Result is: 8${sign} = ${x}`); 
+		return res;
+	}
+	return 8;
+}
+const nine = (sign) => {
+	if (sign) {
+		var a = 9;
+		var arr = sign.trim().split(''); //["*", "b"]
+		arr.unshift(a);
+		var x = eval(arr.join('')); //["a", "*", "b"]
+		var res = console.log(`Result is: 9${sign} = ${x}`); 
+		return res;
+	}
+	return 9;
+}
+
+const _plus = (b) => (` + ${b}`);
+const _minus = (b) => (` - ${b}`);
+const times = (b) => (` * ${b}`);
+const dividedBy = (b) => (` / ${b}`);
+seven(times(five()));
+four(_plus(nine()));
+eight(_minus(three()));
+six(dividedBy(two()));
+
+</script>
 
 </body>
 </html>

@@ -15,19 +15,18 @@
 function getCounter (num) {
 	this.sum = num || 0;
 
-
-this.log = function () {
-	console.log(this.sum); 
-	return this;
-};
-this.count = function (toIncreaseFor) {
-	this.sum += toIncreaseFor; 
-	return this;
-};
-this.reset = function() {
-	this.sum = 0;
-	return this;
-}
+	this.log = function () {
+		console.log(this.sum); 
+		return this;
+	};
+	this.count = function (toIncreaseFor) {
+		this.sum += toIncreaseFor; 
+		return this;
+	};
+	this.reset = function() {
+		this.sum = 0;
+		return this;
+	}
 };
 
 var counter = new getCounter(5);

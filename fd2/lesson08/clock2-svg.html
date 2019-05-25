@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css" media="screen">
+		#clock2 {
+			margin-top: 20px;
+		}
+		.hPoint {
+			width: 46px;
+			height: 46px;
+			fill: #d41a1a;
+		}
+		#runningTime {
+			font-size: 16px;
+			text-align: center;
+			color: #c00;
+			font-family: Arial;
+		}
+		#hour, #min, #sec { 
+			stroke-width: 1px; 
+			fill: #333; 
+			stroke: #555; 
+			transform-origin: 50% 50%;
+		}
+		#sec { 
+			stroke: #f55; 
+		}
+		text {
+			fill: #fff;
+			font-weight: 700;
+			font-size: 18px;
+			font-family: Arial;
+		}
+	</style>
+</head>
+
+<body>
+	
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width='100%' height='400' id='clock2' viewBox='0 0 400 400' preserveAspectRatio="xMidYMin meet">
+	<g id='mainCircle'>
+		<circle stroke ='black' fill='#F1ECE0' r='200' cx='50%' cy='50%'></circle>
+			<foreignObject  x='0' y='160' width='100%' height='200'>
+				<div xmlns="http://www.w3.org/1999/xhtml" width='100%' height='100' id='runningTime'></div>
+			</foreignObject>
+		<g id='arrows'>
+			<rect id="hour" x="197.5" y="50%" width="5" height="100" rx="2.5" ry="2.55"></rect>
+			<rect id="min" x="198.5" y="50%" width="3" height="120" rx="2" ry='2'></rect>
+			<line id="sec" x1="50%" y1="50%" x2="50%" y2="90%"></line>
+		</g>
+		<circle fill='#d41a1a' stroke ='black' r='8' cx='50%' cy='50%'></circle>
+	</g>
+</svg>
+
+
+
+<script type="text/javascript" charset="utf-8" async defer>
+
+let clock2 		= document.getElementById('clock2'); //svg
+let mainCircle 	= document.getElementById('mainCircle'); //циферблат
+let runningTime = document.getElementById('runningTime'); //текущее время в числовом формате (текст)
+let arrows 		= document.getElementById('arrows'); // стрелки 
+
+let sArrow 		= document.getElementById('sec');
+let mArrow 		= document.getElementById('min');
+let hArrow 		= document.getElementById('hour');
+
+
+
+update();
+makingClock();
+secRotation();
+minRotation();
+hrRotation();
+
+
+
+function update() {
+	let date = new Date(); 
+	runningTime.innerHTML = date.toLocaleString();
+	setTimeout(update, 1000);
+};
+
+function makingClock() {
+	let delta = Math.PI * 2 / 12; // сдвиг угла
+	let angle = 0;
+	let h = 3;
+
+	let svgNS = "http://www.w3.org/2000/svg"; 
+
+	for (let i = 0; i < 12; i++) {
+		let point = document.createElementNS(svgNS, 'circle');
+			point.classList.add('hPoint');
+		let text = document.createElementNS(svgNS, 'text');
+
+		x = 200 + 150 * Math.cos(angle);
+	    y = 200 + 150 * Math.sin(angle);
+
+		if (h < 10) {
+			text.setAttribute('x', x - 5);
+			text.setAttribute('y', y + 5);
+		}
+
+		if (h >= 10) {
+			text.setAttribute('x', x - 10);
+			text.setAttribute('y', y + 5);
+		}
+        
+        text.textContent = h;
+
+	    point.setAttribute('r', 25);
+	    point.setAttribute('cx', x);
+	    point.setAttribute('cy', y);
+		
+		mainCircle.insertBefore(point, arrows);
+		mainCircle.insertBefore(text, arrows);
+	    
+	    angle += delta;
+	    h++;
+		if (h > 12) h = 1;
+	};
+};
+
+function secRotation() {
+	let sec = new Date().getSeconds();
+	let mSec = new Date().getMilliseconds();
+	let f = sec * 6 + .006 * (mSec - 900) - 180;
+	sArrow.setAttribute('transform', `rotate(${f})`);
+	setTimeout(secRotation, 100);
+};
+
+function minRotation() {
+	let min = new Date().getMinutes();
+	let sec = new Date().getSeconds();
+	let fullSec = min * 60;
+	let f = fullSec * 0.1 + sec * 0.1 - 180; 
+	mArrow.setAttribute('transform', `rotate(${f})`);
+	setTimeout(minRotation, 1000);
+};
+
+function hrRotation() {
+	let hr = new Date().getHours() >= 12 ? new Date().getHours() - 12 : new Date().getHours();
+	let min = new Date().getMinutes();
+	let sec = new Date().getSeconds();
+	let f = hr * 30 + min * 0.5 + sec * 0.5 / 60 - 180; // 1 час = 30 градусов, + каждая минута = 30 градусов / 60, + каждая секунда = 30 градусов / 60 / 60
+	hArrow.setAttribute('transform', `rotate(${f})`);
+	setTimeout(hrRotation, 1000);
+};
+
+	</script>			
+</body>
+</html>

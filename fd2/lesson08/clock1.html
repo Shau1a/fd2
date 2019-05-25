@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css" media="screen">
+		#clock {
+			margin: 100px auto;
+			border-radius: 50%;
+			width: 400px;
+			height: 400px;
+			background-color: #F6F1E9;
+			position: relative;
+			padding-top: 140px;
+			box-sizing: border-box; 
+			text-align: center;
+			font-size: 18px;
+			font-family: Arial;
+			font-weight: 700;
+			color: #d41a1a;	
+			border: 4px solid rgba(0, 0, 0, 0);
+			z-index: 100;
+			transition: all 3s linear;
+		}
+		.hPoint {
+			width: 46px;
+			height: 46px;
+			background-color: #d41a1a;
+			position: absolute;
+			border-radius: 50%;
+			text-align: center;
+			box-sizing: border-box;
+			padding: 10px;
+			padding-top: 14px;
+			font-family: Arial;
+			font-weight: 700;
+			color: #fff;
+			z-index: 0;
+		}
+		.sArrow, .mArrow, .hArrow {
+			position: absolute;
+			background-color: #000;
+			box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
+			z-index: 10;
+		}
+		.sArrow {
+			width: 2px;
+			height: 180px;
+			top: calc(50% - 20px);
+			left: calc(50% - 1px);
+			transform-origin: 50% 20px;
+		}
+		.mArrow {
+			width: 4px;
+			height: 130px;
+			top: calc(50% - 20px);
+			left: calc(50% - 2px);
+			transform-origin: 50% 20px;
+		}
+		.hArrow {
+			width: 6px;
+			height: 100px;
+			top: calc(50% - 20px);
+			left: calc(50% - 3px);
+			transform-origin: 50% 20px;
+		}
+		.centerCircle {
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			top: calc(50% - 10px);
+			left: calc(50% - 10px);
+			background: #d41a1a;
+			z-index: 100;
+		}
+	</style>
+</head>
+
+<body>
+	
+<script type="text/javascript" charset="utf-8" async defer>
+
+//=========================================================================//
+// часы: 
+// @ clock - куглый циферблат 
+// @ runningTime - 'электронные' идущие часы 
+//=========================================================================//
+
+let clock = document.createElement('div');
+	clock.id = 'clock';
+
+let runningTime = document.createElement('div');
+	runningTime.id = 'runningTime';
+
+document.body.appendChild(clock).appendChild(runningTime);
+
+
+//=========================================================================//
+// стрелки часов, центральный круг:
+// @ sArrow - секундная стрелка
+// @ mArrow - минутная стрелка
+// @ hArrow - часовая стрелка
+// 
+// @ centerCircle - центральный круг
+//=========================================================================//
+
+//========================================//
+//second's Arrow
+//========================================//
+let sArrow = document.createElement('div');
+	sArrow.classList.add('sArrow');
+	clock.appendChild(sArrow);
+
+//========================================//
+//minutes's Arrow
+//========================================//
+let mArrow = document.createElement('div');
+	mArrow.classList.add('mArrow');
+	clock.appendChild(mArrow);
+
+//========================================//
+//hour's Arrow
+//========================================//
+let hArrow = document.createElement('div');
+	hArrow.classList.add('hArrow');
+	clock.appendChild(hArrow);
+
+//========================================//
+//circle in the center of hours
+//========================================//
+let centerCircle = document.createElement('div');
+	centerCircle.classList.add('centerCircle');
+	clock.appendChild(centerCircle);
+
+
+makingClock();
+update();
+setColor();
+secRotation();
+minRotation();
+hrRotation();
+
+function makingClock() {
+	let delta = Math.PI * 2 / 12; // сдвиг угла
+	let angle = 0;
+	let h = 3;
+	let clockCenterX = clock.offsetWidth / 2;
+	let clockCenterY = clock.offsetHeight / 2;
+
+	for (let i = 0; i < 12; i++) {
+		let point = document.createElement('div');
+			point.classList.add('hPoint');
+			point.innerHTML = h;
+	    	clock.appendChild(point);
+
+		let pointCenterX = point.offsetWidth / 2;
+		let pointCenterY = point.offsetHeight / 2;
+
+		point.style.left = clockCenterX - pointCenterX - 4 + 150 * Math.cos(angle) + 'px';
+	    point.style.top = clockCenterY - pointCenterY - 4 + 150 * Math.sin(angle) + 'px';
+	    
+	    angle += delta;
+	    h++;
+		if (h > 12) h = 1;
+	};
+};
+
+
+function secRotation() {
+	let sec = new Date().getSeconds();
+	let mSec = new Date().getMilliseconds();
+	let f = sec * 6 + .006 * (mSec - 900) - 180;
+	sArrow.style.transform = `rotate(${f}deg)`;
+	setTimeout(secRotation, 100);
+};
+
+function minRotation() {
+	let min = new Date().getMinutes();
+	let sec = new Date().getSeconds();
+	let fullSec = min * 60;
+	let f = fullSec * 0.1 + sec * 0.1 - 180; 
+	mArrow.style.transform = `rotate(${f}deg)`;
+	setTimeout(minRotation, 1000);
+};
+
+function hrRotation() {
+	let hr = new Date().getHours() >= 12 ? new Date().getHours() - 12 : new Date().getHours();
+	let min = new Date().getMinutes();
+	let sec = new Date().getSeconds();
+	let f = hr * 30 + min * 0.5 + sec * 0.5 / 60 - 180; // 1 час = 30 градусов, + каждая минута = 30 градусов / 60, + каждая секунда = 30 градусов / 60 / 60
+	hArrow.style.transform = `rotate(${f}deg)`;
+	setTimeout(hrRotation, 1000);
+};
+
+
+function setColor() {
+	let arr = ['00', '33', '66', '99', 'CC', 'FF'];
+	let max = arr.length - 1;
+	let a = Math.floor(Math.random() * max + 1);
+	let	b = Math.floor(Math.random() * max + 1);
+	let	c = Math.floor(Math.random() * max + 1);
+	clock.style.cssText = `box-shadow: 0 0 80px 10px #${arr[a]}${arr[b]}${arr[c]}; 
+	border: 4px solid #${arr[a]}${arr[b]}${arr[c]};`;
+	setTimeout(setColor, 3000);
+};
+
+
+function update() {
+	let date = new Date(); /*
+	let day = date.getDate();
+	let month = date.getMonth() + 1;	
+	let year = date.getFullYear();
+	let hours = date.getHours();
+	let mitutes = date.getMinutes(); 
+	let seconds = date.getSeconds();
+	runningTime.innerHTML = `${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year}   
+	${hours < 10 ? '0' + hours : hours}:${mitutes < 10 ? '0' + mitutes : mitutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+*/
+	runningTime.innerHTML = date.toLocaleString();
+	setTimeout(update, 1000);
+};
+	
+	</script>			
+</body>
+</html>

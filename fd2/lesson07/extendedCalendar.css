@@ -9,7 +9,8 @@ body {
 	color: #fff;
 	border: 1px solid #fff;
 	padding: 10px;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
 }
 #mainTitle a {
 	color: #fff;
@@ -43,7 +44,8 @@ th, caption {
 caption {
   	font-size: 18px;
   	padding-top: 10px;
-  	box-sizing: border-box;
+  	-webkit-box-sizing: border-box;
+  	        box-sizing: border-box;
 }
 td, .curr_month {
 	border: 1px solid #757070;
@@ -56,6 +58,7 @@ td, .curr_month {
 	margin: 0;
 	padding: 0;
 	cursor: pointer;
+	transition: all .8s ease-out;
 }
 .weekend {
 	background: rgba(120, 120, 120, .5);
@@ -79,11 +82,19 @@ select {
   	-moz-appearance: none;
   	appearance: none; 
   	cursor: pointer;
-  	text-align: center; 
-  	box-sizing: border-box;
+  	text-align: center;
+  		text-align-last: center; 
+  	-webkit-box-align: center;
+  	    -ms-flex-align: center;
+  	        align-items: center; 
+  	-webkit-box-sizing: border-box; 
+  	        box-sizing: border-box;
 }
 select:hover {
 	border: 1px solid #fff;
+}
+option {
+	text-align-last: center; 
 }
 #creatingACalendar, #deletingACalendar {
 	display: inline-block;
@@ -92,16 +103,29 @@ select:hover {
 	font-weight: 600;
 	color: #fff;
 	padding: 2px;
-	transition: 1s;
+	-webkit-transition: .8s;
+	-o-transition: .8s;
+	transition: .8s;
 }
 #creatingACalendar:disabled, #deletingACalendar:disabled {
 	background: #AC7979;
 }
 #calendarsWrapper {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+td:hover {
+	background: red;
+	color: #fff;
 }
 .highlight {
 	background: red;

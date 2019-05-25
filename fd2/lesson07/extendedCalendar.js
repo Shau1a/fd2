@@ -84,8 +84,8 @@ MonthList.addEventListener('change', function() {
 prevYear.addEventListener('click', function(e){
 	e.preventDefault();
 	year--; 
-	if (year < 1970) {year = new Date().getFullYear();}  
-	YearList.length = 0; 
+	if (year < 1970) { year = new Date().getFullYear(); }  
+
 	createYearsList(year); 	
 });
 
@@ -95,16 +95,18 @@ prevMonth.addEventListener('click', function(e){
 	if (month == (-1)) { 
 		month = 11;
 		year--; 
+		if (year < 1970) { year = new Date().getFullYear(); }
+		createYearsList(year); 
 	}
-	MonthList.length = 0;
+
 	createMonthList(month);
 });
 
 nextYear.addEventListener('click', function(e){
 	e.preventDefault();
 	year++;
-	if (year > new Date().getFullYear()) {year = 1970;}
-	YearList.length = 0;
+	if (year > new Date().getFullYear()) { year = 1970; }
+
 	createYearsList(year); 
 });
 
@@ -114,8 +116,10 @@ nextMonth.addEventListener('click', function(e){
 	if (month == 12) { 
 		month = 0;
 		year++; 
+		if (year > new Date().getFullYear()) { year = 1970 }
+		createYearsList(year); 
 	}
-	MonthList.length = 0;
+
 	createMonthList(month); 
 });
 
@@ -135,7 +139,7 @@ class Calendar {
 			if (dayNumber == 0) { dayNumber = 7; } 
 		let calendar = '<table><caption>' + allMonths[month] + ' ' + year + '</caption>';
 			calendar += '<tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';		
-		let prevD = dayNumber - 1;
+		let prevD = dayNumber - 2;
 	    for (var i = 0; i < dayNumber - 1; i++) {  	
 	        calendar += '<td class = "other_month">' + (lastDayOfPreviousMonth - prevD) + '</td>';
 	        prevD--;
@@ -148,7 +152,7 @@ class Calendar {
 	        	calendar += '<td class = "weekend">' + this.date.getDate() + '</td>';
 	        }
 	        if (this.date.getDay() == 0) { 
-	          calendar += '</tr><tr>';
+	         	calendar += '</tr><tr>';
 	        }
 	        this.date.setDate(this.date.getDate() + 1);
 	    }	     
@@ -188,14 +192,19 @@ function isDisabledCreating() {
 // Highliting of TD in tables
 //==========================//
 function selectTD(elem) {
+	let selectedTd;
 	elem.addEventListener('click', function(event) {
 		let target = event.target;
 		if (target.tagName != 'TD') return;
-		else if (target.classList.contains('highlight')) {
-			target.classList.remove('highlight');
-		}
-		else target.classList.add('highlight');
+		highlight(target);
 	});
+	function highlight(node) {
+		if (selectedTd) {
+			selectedTd.classList.remove('highlight');
+		}
+		selectedTd = node;
+		selectedTd.classList.add('highlight');
+	} 
 };
 
 
@@ -203,8 +212,9 @@ function selectTD(elem) {
 // Creating lists of years 
 //==========================//
 function createYearsList(val) {
+	YearList.length = 0;
 	let selectAll = document.createElement('option');
-	selectAll.innerHTML = 'Select';
+	selectAll.innerHTML = 'Выбрать год';
 	YearList.appendChild(selectAll); 
 	for (let i = 1970; i <= new Date().getFullYear(); i++) {
 		let year = document.createElement('option');
@@ -221,8 +231,9 @@ function createYearsList(val) {
 // Creating lists of months
 //==========================//
 function createMonthList(val) {
+	MonthList.length = 0;
 	let selectAll = document.createElement('option');
-	selectAll.innerHTML = 'Select';
+	selectAll.innerHTML = 'Выбрать месяц';
 	MonthList.appendChild(selectAll);
 	for (let i = 0; i < 12; i++) {
 		let month = document.createElement('option');
