@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Tennis-dom</title>
+	<style>
+		html, body {
+			min-height: 100%;
+		}
+		body {
+			background: radial-gradient(at top, #E1FCFA, #B1DCF3, #4169E1);
+		}
+		#title {
+			display: block;
+			margin: auto;
+			margin-top: 20px;
+			font-size: 22px;
+			font-family: Arial;
+			color: royalblue;
+			font-weight: 700;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		#play {
+			display: block;
+			width: 200px;
+			height: 60px;
+			margin: auto;
+			font-size: 18px;
+			font-weight: 500;
+		}
+		#ScoreField {
+			display: flex;
+			width: 60%;
+			margin: auto;
+			margin-top: 20px;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 3em;
+			color: royalblue;
+			font-weight: 700;
+		}
+		#field {
+			display: block;
+			overflow: hidden;
+			width: 600px;
+			height: 340px;
+			margin: auto;
+			margin-top: 20px;
+			background: #f9df7b;
+			position: relative;
+			border: 1px solid black;
+			box-sizing: border-box;
+		}
+		@keyframes bounce {
+			from {
+				transform: scale(0);
+			}
+			to {
+				transform: scale(1);
+			}
+		}
+		@keyframes fade {
+			from {
+				opacity: 1;
+			}
+			to {
+				opacity: 0;
+				visibility: none;
+				transform: scale(0);
+			}
+		}
+		#finish {
+			width: 300px;
+			top: 50%;
+			left: 50%;
+			margin-left: -150px;
+			margin-top: -50px;
+			text-align: center;
+			color: royalblue;
+			font-size: 5em;
+			transition: opacity .4s linear;
+			transform-origin: 50% 50%;
+			animation: bounce 1.5s ease-in-out, fade 1s linear 3s;
+		}
+	</style>
+</head>
+<body>
+
+<script>
+//===================================================//
+// Верстка
+//===================================================//
+//
+const TITLE = document.createElement('div'); //ЗАГОЛОВОК
+TITLE.id = 'title';
+TITLE.innerHTML = 'TENNIS';
+document.body.appendChild(TITLE);
+
+const PLAY = document.createElement('button'); //КНОПКА "PLAY"
+PLAY.id = 'play';
+let startText = 'Start a Game';
+let resetText = 'Stop & Restart';
+PLAY.innerHTML = startText;
+document.body.appendChild(PLAY);
+
+const ScoreField = document.createElement('div'); //FLEX КОНТЕЙНЕР ДЛЯ ПОДСЧЕТА ОЧКОВ
+ScoreField.id = 'ScoreField';
+document.body.appendChild(ScoreField);
+
+const LeftPlayer = document.createElement('div'); //ОЧКИ ЛЕВОГО ИГРОКА
+LeftPlayer.innerHTML = '0';
+const RightPlayer = document.createElement('div'); //ОЧКИ ПРАВОГО ИГРОКА
+RightPlayer.innerHTML = '0';
+ScoreField.appendChild(LeftPlayer);
+ScoreField.appendChild(RightPlayer);
+
+const FIELD = document.createElement('div'); //ИГРОВОЕ ПОЛЕ
+FIELD.id = 'field';
+document.body.appendChild(FIELD);
+let F = document.getElementById('field');
+
+
+//===================================================//
+// Игровой процесс
+//===================================================//
+
+//общие параметры игрового поля: высота, ширина, центр
+let params = {
+	TotalHeight : FIELD.offsetHeight,
+	TotalWidth : FIELD.offsetWidth,
+	FieldCenterY : FIELD.offsetHeight / 2,
+	FieldCenterX : FIELD.offsetWidth / 2,
+};
+
+let lY1, lY2, rY1, rY2; //верхняя и нижняя границы левой и правой ракеток
+let canStart = true; //разрешение на старт игры
+let l, r, ballH; //левая, правая ракетки и мяч
+let _DOM_LeftRacket, _DOM_RightRacket, _DOM_BALL; //стучимся в DOM элементы 
+let requestId; //переменная для остановки анимации игры (от requestAnimationFrame)
+
+let pressStorage = []; //массив зажатых клавиш, для одновременной работы нескольких клавиш
+
+document.body.addEventListener('keydown', function(e) { 
+	pressStorage[e.keyCode] = true;	
+});
+document.body.addEventListener('keyup', function(e) {
+	pressStorage[e.keyCode] = false;
+});
+
+createGameElements(); //рисуем ракетки и мяч
+
+upgrateRacketsTop(); //получаем значения верхних и нижних границ ракеток для вычисления отбивания мяча от них
+
+ballH.update(); //запускаем мяч (метод функции-конструктора по смене position элемента, примененный к конкретно созданному объекту)
+
+racketsMovement(); //проверяеv массив зажатых клавиш и запускает их движение
+
+// кнопка старта - запуск игры (функции go) по клику
+PLAY.addEventListener('click', function(e) {
+	e.preventDefault();
+	go();
+});
+
+//=========================================//
+// Движение ракеток
+//=========================================//
+function racketsMovement() {
+	if (pressStorage[l.topMove]) {
+		l.goTop();
+		upgrateRacketsTop();
+	};
+	if (pressStorage[l.downMove]) {
+		l.goDown();
+		upgrateRacketsTop();
+	};
+	if (pressStorage[r.topMove]) {
+		r.goTop();
+		upgrateRacketsTop();
+	};
+	if (pressStorage[r.downMove]) {
+		r.goDown();
+		upgrateRacketsTop();
+	}
+	requestAnimationFrame(racketsMovement);
+};
+
+//=========================================//
+// Обновление значений крайних точек ракеток
+//=========================================//
+function upgrateRacketsTop() {
+	lY1 = l.PlayPos;
+	lY2 = lY1 + l.height;
+	rY1 = r.PlayPos;
+	rY2 = rY1 + r.height;
+};
+
+//=========================================//
+// Управление кнопкой "старт" и игрой: 
+// начало и перезапуск
+//=========================================//
+function go() {
+	if (canStart) {
+		LeftPlayer.scoreCounter = count();
+		RightPlayer.scoreCounter = count();
+		start();
+		PLAY.innerHTML = resetText;
+		canStart = false;
+	}
+	else {
+		cancelAnimationFrame(requestId);
+		deleteGameElements();
+		createGameElements();
+		PLAY.innerHTML = startText;
+		LeftPlayer.innerHTML = '0';
+		RightPlayer.innerHTML = '0';
+		canStart = true;
+	}
+};
+
+//=========================================//
+// Рекурсия на обновление положения мяча 
+// во время игры (ф-ии tick)
+//=========================================//
+function start() {
+	requestId = requestAnimationFrame(start);
+	tick(); 
+};
+
+//=========================================//
+// Создаем игровые объекты, находм их в DOM
+//=========================================//
+function createGameElements() {
+	l = new Racket('left', 16, 17, 'LEFTRACKET'); // 16 - shift, 17 - ctrl
+	r = new Racket('right', 38, 40, 'RIGHTRACKET'); // 38 - up, 40 - down 
+	ballH = new createBall();
+	_DOM_LeftRacket = document.getElementById('LEFTRACKET');
+	_DOM_RightRacket = document.getElementById('RIGHTRACKET');
+	_DOM_BALL = document.getElementById('BALL');
+};
+
+//=========================================//
+// Удаляем игровые объекты из DOM для 
+// обновления игры
+//=========================================//
+function deleteGameElements() {
+	F.removeChild(_DOM_LeftRacket);
+	F.removeChild(_DOM_RightRacket);
+	F.removeChild(_DOM_BALL);
+};
+
+//=========================================//
+// Функция-конструктор ракеток
+//=========================================//
+function Racket(pos, top, down, id) {
+	this.width = 10;
+	this.height = 100;
+	this.speed = 5;
+	this.position = pos;
+	this.PlayPos = params.FieldCenterY - this.height / 2;
+	this.topMove = top;
+	this.downMove = down;
+	let racket = document.createElement('div');
+		racket.style.width = this.width + 'px';
+		racket.style.height = this.height + 'px';
+		racket.style.position = 'absolute';
+		racket.style.transform = `translateY(${this.PlayPos}px)`;
+		if (pos == 'left') {
+			racket.id = id;
+			racket.style.background = '#e2683c';
+			racket.style.left = '5px';
+		}
+		else if (pos == 'right') {
+			racket.id = id;
+			racket.style.background = '#66921b';
+			racket.style.right = '5px';
+		}
+	FIELD.appendChild(racket);
+
+	this.goTop = function() {
+		if (this.PlayPos > 0) {
+			this.PlayPos -= this.speed;
+			racket.style.transform = `translateY(${this.PlayPos}px)`;
+		}
+	};
+	this.goDown = function() {
+		if (this.PlayPos < params.TotalHeight - this.height) {
+			this.PlayPos += this.speed;
+			racket.style.transform = `translateY(${this.PlayPos}px)`;
+		}
+	};
+};
+
+//=========================================//
+// Функция-конструктор мяча
+//=========================================//
+function createBall() {
+	this.posX   = params.FieldCenterX - 25;
+	this.posY   = params.FieldCenterY - 25;
+	this.width  = 50;
+	this.height = 50;
+	this.speedX  = 3;
+	this.speedY  = Math.floor((Math.random() * 2) + 2);
+	this.turbo = 1.2;
+		    
+	let BALL = document.createElement('div');
+	BALL.id = 'BALL';
+	BALL.style.borderRadius = '50%';
+	BALL.style.background = '#05219C';
+	BALL.style.position = 'relative';
+	BALL.style.width = this.width + 'px';
+	BALL.style.height = this.height + 'px';
+	BALL.style.top = this.posY + 'px';
+	BALL.style.left = this.posX + 'px';
+	FIELD.appendChild(BALL);
+
+	this.update  = function() {
+	    BALL.style.left = this.posX + 'px';
+	    BALL.style.top = this.posY + 'px';
+	};
+};
+
+//=========================================//
+// Счетчик забитых голов
+//=========================================//
+function count() {
+	let zero = 0;
+	return function() {
+		return ++zero;
+	}
+};
+
+//=========================================//
+// Окончание игры при определенном забитом 
+// количестве голов
+//=========================================//
+function finishTheGame() {
+	if (RightPlayer.innerHTML >= 2 || LeftPlayer.innerHTML >= 2) {
+		cancelAnimationFrame(requestId);
+		let finish = document.createElement('div');
+		finish.id = 'finish';
+		finish.style.position = 'absolute';
+		finish.innerHTML = 'FINISH';
+		F.appendChild(finish);
+		let fin = document.getElementById('finish');
+		setTimeout(function() {
+			F.removeChild(fin);
+		}, 4000);
+		setTimeout(go, 4400);
+	}
+};
+
+//=========================================//
+// Просчет крайних значений ускорения для мяча
+//=========================================//
+function setParam() {
+   	ballH.speedX >= 8 ? ballH.speedX = 8 : ballH.speedX = ballH.speedX;
+   	ballH.speedX < 2 && ballH.speedX >= 0 ? ballH.speedX = 2 : ballH.speedX = ballH.speedX;
+   	ballH.speedX < 0 && ballH.speedX >= -2 ? ballH.speedX = -2 : ballH.speedX = ballH.speedX;
+   	ballH.speedX <= -8 ? ballH.speedX = -8 : ballH.speedX = ballH.speedX;
+   	ballH.speedY >= 7 ? ballH.speedY = 7 : ballH.speedY = ballH.speedY;
+   	ballH.speedY < 1 && ballH.speedY >= 0 ? ballH.speedY = 1 : ballH.speedY = ballH.speedY;
+   	ballH.speedY < 0 && ballH.speedY >= -1 ? ballH.speedY = -1 : ballH.speedY = ballH.speedY;
+   	ballH.speedY <= -7 ? ballH.speedY = -7 : ballH.speedY = ballH.speedY;
+};
+
+//=========================================//
+// Смена позиций мяча, контроль за 
+// отскакиеванием от ракеток и границ поля
+//=========================================//
+function tick() {
+	finishTheGame();
+    ballH.posX += ballH.speedX;
+    ballH.posY += ballH.speedY;
+    // отбился ли мяч от правой ракетки
+    if (((ballH.posY + 25 > rY1) && (ballH.posY < rY2 - 25)) && ((ballH.posX + ballH.width) > (params.TotalWidth - 15))) {
+        ballH.posX = params.TotalWidth - 15 - ballH.width;
+   		ballH.speedX = -(ballH.speedX * ballH.turbo);
+   		ballH.speedY = ballH.speedY * ballH.turbo;
+   		setParam(); 
+    }
+    // отбился ли мяч от левой ракетки
+    if (((ballH.posY + 25 > lY1) && (ballH.posY < lY2 - 25)) && (ballH.posX < 15)) {
+   		ballH.posX = 15;
+   		ballH.speedX = -(ballH.speedX * ballH.turbo);
+   		ballH.speedY = ballH.speedY * ballH.turbo;
+   		setParam();
+    }
+    // вылетел ли мяч правее стены?
+    if (ballH.posX + ballH.width > params.TotalWidth) {
+        ballH.posX = params.TotalWidth - ballH.width - 1;
+   		ballH.speedX = -(ballH.speedX / ballH.turbo);
+   		ballH.speedY = ballH.speedY / ballH.turbo;
+   		setParam();
+        LeftPlayer.innerHTML = LeftPlayer.scoreCounter();
+    }
+    // вылетел ли мяч левее стены?
+    if (ballH.posX < 0) { 
+    	ballH.posX = 0;
+   		ballH.speedX = -(ballH.speedX / ballH.turbo);
+   		ballH.speedY = ballH.speedY / ballH.turbo; 
+   		setParam(); 
+    	RightPlayer.innerHTML = RightPlayer.scoreCounter();
+    }
+    // вылетел ли мяч ниже пола?
+    if (ballH.posY + ballH.height > params.TotalHeight) {
+        ballH.posY = params.TotalHeight - ballH.height;
+        ballH.speedY = -ballH.speedY;
+    }
+    // вылетел ли мяч выше потолка?
+    if (ballH.posY < 0) {
+    	ballH.posY = 0;
+        ballH.speedY = -ballH.speedY;
+    }
+	ballH.update();
+};
+</script>
+</body>
+</html>
