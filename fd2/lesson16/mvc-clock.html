@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Clock MVC</title>
+		<style type="text/css" media="screen">
+		#wrapper {
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			padding-right: 140px;
+			padding-left: 140px;
+		}
+		#wrapper>div {
+			margin-right: 20px;
+		}
+		#wrapper div {
+			text-align: center;
+		}
+		.clock-margin {
+			margin: 40px auto;
+		}
+		.clock {
+			margin: 40px auto;
+			border-radius: 50%;
+			width: 200px;
+			height: 200px;
+			background-color: #F6F1E9;
+			fill: #F6F1E9;
+			position: relative;
+			box-sizing: border-box; 
+			text-align: center;
+			font-size: 10px;
+			font-family: Arial;
+			font-weight: 700;
+			color: #d41a1a;	
+			border: 4px solid rgba(0, 0, 0, 0);
+			z-index: 100;
+			transition: all 3s linear;
+		}
+		.hPoint {
+			width: 23px;
+			height: 23px;
+			background-color: #d41a1a;
+			fill: #d41a1a;
+			position: absolute;
+			border-radius: 50%;
+			text-align: center;
+			box-sizing: border-box;
+			padding: 5px;
+			padding-top: 7px;
+			font-family: Arial;
+			font-weight: 700;
+			color: #fff;
+			z-index: 0;
+		}
+		.sArrow, .mArrow, .hArrow {
+			position: absolute;
+			background-color: #000;
+			box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
+			z-index: 10;
+		}
+		.sArrow {
+			width: 2px;
+			height: 90px;
+			top: calc(50% - 20px);
+			left: calc(50% - 1px);
+			transform-origin: 50% 20px;
+		}
+		.mArrow {
+			width: 4px;
+			height: 70px;
+			top: calc(50% - 20px);
+			left: calc(50% - 2px);
+			transform-origin: 50% 20px;
+		}
+		.hArrow {
+			width: 4px;
+			height: 60px;
+			top: calc(50% - 20px);
+			left: calc(50% - 2px);
+			transform-origin: 50% 20px;
+		}
+		.centerCircle {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			top: calc(50% - 5px);
+			left: calc(50% - 5px);
+			background: #d41a1a;
+			z-index: 100;
+		}
+		text {
+			fill: #fff;
+			font-weight: 700;
+			font-size: 10px;
+			font-family: Arial;
+		}
+		.arrows rect {
+			transform-origin: 50% 50%;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="clock1"></div>
+		<div id="clock2"></div>
+		<div id="clock3"></div>
+		<div id="clock4"></div>
+		<div id="clock5"></div>
+		<div id="clock6"></div>
+	</div>
+	
+<script src="DOM_View.js"></script>
+<script src="SVG_View.js"></script>
+<script src="CANVAS_View.js"></script>
+
+<script>
+
+// model
+// 
+function Clock(gtm) {
+
+	this.go = true;
+	
+	let viewModel = null;
+	let id = null;
+
+	this.start = function(view) {
+		viewModel = view;
+	};
+
+	this.getTime = function() {
+		let date = new Date();
+		let year = date.getFullYear();
+		let month = date.getMonth();	
+		let day = date.getDate();
+		let hours = date.getUTCHours() + gtm;
+		let mitutes = date.getMinutes(); 
+		let seconds = date.getSeconds();
+		let option = new Date(year, month, day, hours, mitutes, seconds);
+		return option;
+	};
+
+	this.secRotation = function() {
+		let sec = this.getTime().getSeconds();
+		let f = sec * 6 - 180;
+		if (viewModel.updateSArrow) {
+			viewModel.updateSArrow(f);
+		}
+	};
+
+	this.minRotation = function() {
+		let min = this.getTime().getMinutes();
+		let sec = this.getTime().getSeconds();
+		let fullSec = min * 60;
+		let f = fullSec * 0.1 + sec * 0.1 - 180; 
+		if (viewModel.updateMinRotation) {
+			viewModel.updateMinRotation(f);
+		}
+	};
+
+	this.hrRotation = function() {
+		let hr = this.getTime().getHours() >= 12 ? this.getTime().getHours() - 12 : this.getTime().getHours();
+		let min = this.getTime().getMinutes();
+		let sec = this.getTime().getSeconds();
+		let f = hr * 30 + min * 0.5 + sec * 0.5 / 60 - 180;
+		if (viewModel.updateHArrow) {
+			viewModel.updateHArrow(f);
+		} 
+	};
+
+	this.viewUpdate = function() {
+		if (this.go == true) {
+			id = setInterval(function() {
+				this.secRotation();
+				this.minRotation();
+				this.hrRotation();
+				if (viewModel.init) {
+					viewModel.init();
+				}
+			}.bind(this), 100);
+		}
+		else if (this.go == false) {
+			clearInterval(id);
+		}
+	};
+
+	this.changeState = function(item, state) {
+		viewModel.changeState(item, state);
+	};
+};
+
+
+//controller
+//
+function ClockController() {
+	let myModel = null;
+	let myField = null;
+	let run = null;
+	let stop = null;
+
+	this.start = function(model, field) {
+		myModel = model;
+		myField = field;
+
+		run = myField.querySelector('.run');
+		stop = myField.querySelector('.stop');
+
+		run.addEventListener('click', function(e){
+			e.preventDefault();
+			myModel.go = true;
+			myModel.changeState(run, true);
+			myModel.changeState(stop, false);
+			myModel.viewUpdate();
+		});
+
+		stop.addEventListener('click', function(e){
+			e.preventDefault();
+			myModel.go = false;
+			myModel.changeState(run, false);
+			myModel.changeState(stop, true);
+			myModel.viewUpdate();
+		});
+	}
+}
+
+
+
+
+// DOM - 1
+let clock1 = new Clock(3);
+let view1 = new ClockViewDOM();
+let controller1 = new ClockController();
+
+let containerElem1=document.getElementById('clock1');
+
+clock1.start(view1);
+view1.start(clock1, containerElem1, 'Minsk', +3);
+controller1.start(clock1, containerElem1);
+
+clock1.viewUpdate();
+
+// DOM - 2
+let clock2 = new Clock(-4);
+let view2 = new ClockViewDOM();
+let controller2 = new ClockController();
+
+let containerElem2=document.getElementById('clock2');
+
+clock2.start(view2);
+view2.start(clock2, containerElem2, 'New-York', -4);
+controller2.start(clock2, containerElem2);
+clock2.viewUpdate();
+
+
+
+// SVG - 1 
+let clock3 = new Clock(10);
+let view3 = new ClockViewSVG();
+let controller3 = new ClockController();
+
+let containerElem3=document.getElementById('clock3');
+
+clock3.start(view3);
+view3.start(clock3, containerElem3, 'Sidney', 10);
+controller3.start(clock3, containerElem3);
+clock3.viewUpdate();
+
+// SVG - 2 
+let clock4 = new Clock(-3);
+let view4 = new ClockViewSVG();
+let controller4 = new ClockController();
+
+let containerElem4=document.getElementById('clock4');
+
+clock4.start(view4);
+view4.start(clock4, containerElem4, 'Argentina', -3);
+controller4.start(clock4, containerElem4);
+clock4.viewUpdate();
+
+
+// CANVAS - 1
+let clock5 = new Clock(1);
+let view5 = new ClockViewCanvas();
+let controller5 = new ClockController();
+
+let containerElem5=document.getElementById('clock5');
+
+clock5.start(view5);
+view5.start(clock5, containerElem5, 'London', 1);
+controller5.start(clock5, containerElem5);
+clock5.viewUpdate();
+
+// CANVAS - 2
+let clock6 = new Clock(9);
+let view6 = new ClockViewCanvas();
+let controller6 = new ClockController();
+
+let containerElem6=document.getElementById('clock6');
+
+clock6.start(view6);
+view6.start(clock6, containerElem6, 'Tokio', 9);
+controller6.start(clock6, containerElem6);
+clock6.viewUpdate();
+</script>
+</body>
+</html>
