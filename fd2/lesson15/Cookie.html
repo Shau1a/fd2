@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>LocalStorage</title>
+	<style>
+		body, html {
+		    width: 100%;
+		    height: 100%;
+		    margin: 0;
+		    padding:0;
+		    overflow:hidden;
+		    font-family: Roboto, Arial;
+		}
+		#canvas {
+			position:fixed;
+    		left:0;
+    		top:0;
+    		transition: filter 1s linear;
+    		filter: blur(0px);
+		}
+		#popup {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(100, 100, 100, .5);
+			overflow: hidden;
+			transform-origin: 50% 0;
+			transition: transform 1s linear;
+			transform: scaleX(0);
+		}
+		#dialogWindow {
+			display: block;
+			position: relative;
+			margin: auto;
+			margin-top: 200px;
+			width: 500px;
+			height: 360px;
+			background: rgba(999, 999, 999, .8);
+		}
+		#title {
+			text-align: center;
+			font-size: 20px;
+			padding-top: 20px;
+		}
+		#name, #age {
+			display: block;
+			margin: auto;
+			padding: 16px;
+			margin-top: 40px;
+			width: 200px;
+			border: none;
+			font-size: 18px;
+		}
+		#age {
+			margin-top: 20px;
+		}
+		#butt {
+			display: block;
+			background-color: gray;
+			height: 40px;
+			color: #fff;
+			border: none;
+			font-size: 18px;
+			position: absolute;
+			width: 200px;
+			bottom: 30px;
+			left: 50%;
+			transform: translateX(-50%); 
+			text-transform: uppercase;
+		}
+		.err {
+			display: block;
+			margin: auto;
+			text-align: center;
+			font-size: 12px;   
+			font-family: Roboto;
+			height: 16px;
+		}
+		#output {
+			display: block;
+			position: absolute;
+			width: 480px;
+			height: 110px;
+			padding: 12px;
+			background-color: #fff;
+			top: 50%;
+			left: 50%;
+			transform: translate(-250px, -340px);
+			text-align: center;
+			font-family: Roboto;
+			font-style: italic;
+			font-size: 24px;
+			color: #800606;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas">Your browser doesn't support canvas</canvas>
+	<div id="output"></div>
+
+	<script>
+		
+	let canv = document.getElementById('canvas');
+	let ctx = canv.getContext('2d');
+	let color = 0;
+	let x = -20;
+	let y = -25;
+
+	let colors = ['#836054','#c8b0b3','#e3d9c5','#ffd591','#c67335'];
+
+	let params = {
+		x : x,
+		y : y,
+		lineWidth : 20,
+		shiftX : 40,
+		shiftY : 25
+	};
+
+	window.onload = window.onresize = function() { 
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		params.x = x;
+		params.y = y;
+		color = 0;
+		createBackground();
+		createBox();
+	};
+
+
+	function createLines() {
+		ctx.beginPath();
+		ctx.strokeStyle = colors[color];
+		ctx.lineWidth = params.lineWidth;
+		ctx.moveTo(params.x, params.y);
+		let count = 0;
+		for (let i = params.x; i < canv.width + 25; i+=params.shiftX) {
+			if (count%2 == 0) {
+				ctx.lineTo(params.x+params.shiftX, params.y+params.shiftY);
+			}
+			else {
+				ctx.lineTo(params.x+params.shiftX, params.y);
+			}
+			params.x += params.shiftX;
+			++count;			
+		}
+		ctx.stroke();
+	};
+		
+
+	function createBackground() {
+		do {
+			params.x = x;
+			createLines();
+			params.y = params.y + params.shiftY;
+			color++;
+			if (color >= colors.length) {
+				color = 0;
+			}
+		} while(params.y < (canvas.height + 25))
+	};
+
+
+	function createBox() {
+		let 
+			widthCenter = canvas.width / 2,
+			heightCenter = canvas.height / 2;
+
+		ctx.save(); //default
+		ctx.beginPath();
+		ctx.lineWidth = 3;
+		ctx.fillStyle = '#fff';
+		ctx.strokeStyle = '#e3d9c5';
+		ctx.rect(widthCenter - 250, heightCenter - 180, 500, 360);
+		ctx.fill();
+		ctx.stroke();
+		ctx.restore(); //default
+
+		ctx.save(); //default
+			
+		// main box
+		ctx.beginPath();
+
+		let gradient = ctx.createLinearGradient(widthCenter, heightCenter - 50, widthCenter, heightCenter + 300);
+
+		gradient.addColorStop(0, '#bfd05f');
+		gradient.addColorStop(.8, '#254d0d');
+		ctx.shadowColor = '#B8B8B8';
+		ctx.shadowBlur = 20;
+		ctx.shadowOffsetX = 10;
+		ctx.shadowOffsetY = 10;
+		ctx.fillStyle = gradient;
+		ctx.rect(widthCenter - 100, heightCenter - 40, 200, 200);
+		ctx.fill();
+
+		ctx.restore();//default
+
+		ctx.beginPath();
+		ctx.lineWidth = 1;
+		ctx.fillStyle = '#f4dc8c';
+		ctx.strokeStyle = '#dfa90d';
+		ctx.save(); //save that above
+		ctx.rect(widthCenter - 10, heightCenter - 40, 20, 200);
+		ctx.fill();
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.restore();//lineWidth, fillStyle, strokeStyle
+		
+		ctx.save();
+		ctx.rect(widthCenter - 100, heightCenter + 40, 200, 20);
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(widthCenter, heightCenter - 40);
+		ctx.lineTo(widthCenter - 180, heightCenter - 60);
+		ctx.lineTo(widthCenter - 190, heightCenter - 160);
+
+		ctx.moveTo(widthCenter, heightCenter - 40);
+		ctx.lineTo(widthCenter + 180, heightCenter - 60);
+		ctx.lineTo(widthCenter + 190, heightCenter - 160);
+
+		ctx.shadowColor = '#B8B8B8';
+		ctx.shadowBlur = 20;
+		ctx.shadowOffsetX = 10;
+		ctx.shadowOffsetY = 10;
+		ctx.fill();
+		
+		ctx.restore();
+		ctx.beginPath();
+		ctx.fillStyle = '#fff';
+		ctx.moveTo(widthCenter - 2, heightCenter - 39);
+		ctx.lineTo(widthCenter - 160, heightCenter - 80);
+		ctx.lineTo(widthCenter - 170, heightCenter - 140);
+		ctx.moveTo(widthCenter + 2, heightCenter - 39);
+		ctx.lineTo(widthCenter + 160, heightCenter - 80);
+		ctx.lineTo(widthCenter + 170, heightCenter - 140);
+		ctx.fill();
+	};
+
+//===========================================//
+// Pop-Up Window
+//===========================================//
+
+	let date_regex = /^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.(18|19|20)\d{2}$/;
+
+	let popup = document.createElement('div');
+		popup.id = 'popup';
+		document.body.appendChild(popup);
+
+	let dialogWindow = document.createElement('div');
+		dialogWindow.id = 'dialogWindow';
+		popup.appendChild(dialogWindow);
+
+	let title = document.createElement('h3');
+		title.id = 'title';
+		title.innerHTML = 'Представьтесь, пожалуйста';
+
+	let name = document.createElement('input');
+		name.id = 'name';
+		name.setAttribute('placeholder', 'Ваше имя');
+		name.setAttribute('data-length', '2');
+		let n_err = document.createElement('span');
+		n_err.classList.add('err');
+
+	let age = document.createElement('input');
+		age.id = 'age';
+		age.setAttribute('placeholder', 'Когда Вы родились?');
+		age.setAttribute('data-regx', date_regex);
+		let a_err = document.createElement('span');
+		a_err.classList.add('err');
+
+	let butt = document.createElement('button');
+		butt.id = 'butt';
+		butt.innerHTML = 'сохранить';
+
+	let
+		falsy = '1px solid red',
+		truth = '1px solid green',
+		name_error = 'Введите имя',
+		age_error = 'Введите дату в формате: дд.мм.гггг';
+	
+	let output = document.getElementById('output');
+
+	dialogWindow.appendChild(title);
+	dialogWindow.appendChild(name);
+	dialogWindow.appendChild(n_err);
+	dialogWindow.appendChild(age);
+	dialogWindow.appendChild(a_err);
+	dialogWindow.appendChild(butt);
+
+	
+	butt.addEventListener('click', function(e){
+		e.preventDefault;
+		save();
+	});
+
+
+	let timer = setTimeout(function() {
+		if (!getCookie('name') && !getCookie('age')) {
+			canvas.style.filter = 'blur(10px)';
+			popup.style.transform = 'scaleX(1)';
+		}
+		else {
+			let id = setInterval(out, 1000);
+		}
+	}, 4);
+
+
+	function save() {
+		if (name.value != '' && name.value != null && name.value != undefined) {
+			if (date_regex.test(age.value)) {
+				setCookie("age", age.value);
+				setCookie("name", name.value);
+				canvas.style.filter = 'blur(0px)';
+				popup.style.transform = 'scaleX(0)';
+				setInterval(out, 1000);
+			}
+			else {
+				age.style.border = falsy;
+				a_err.innerHTML = age_error;
+			}
+		}
+		else {
+			name.style.border = falsy;
+			n_err.innerHTML = name_error;
+		}
+	};
+
+
+	function setCookie(name, value, options) {
+	  	options = options || {};
+
+		let expires = options.expires;
+
+		if (typeof expires == "number" && expires) {
+	    	let d = new Date();
+	    	d.setTime(d.getTime() + expires * 1000);
+	    	expires = options.expires = d;
+	  	}
+	  	if (expires && expires.toUTCString) {
+	    	options.expires = expires.toUTCString();
+	  	}
+
+	  	value = encodeURIComponent(value);
+
+	  	let updatedCookie = name + "=" + value;
+
+	  	for (let propName in options) {
+	    	updatedCookie += "; " + propName;
+	    	let propValue = options[propName];
+	    	if (propValue !== true) {
+	      		updatedCookie += "=" + propValue;
+	    	}
+	  	}
+	  	document.cookie = updatedCookie;
+	};
+
+
+	function getCookie(name) {
+	  	let matches = document.cookie.match(new RegExp(
+	    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	  	));
+	  	return matches ? decodeURIComponent(matches[1]) : undefined;
+	};
+
+	function deleteCookie(name) {
+	  	setCookie(name, "", {
+	 	   expires: -1
+		})
+	};
+
+	function reverseDate(date) {
+		let arr = date.split('.').reverse().join(', ');
+		return arr;
+	};
+
+
+	document.body.addEventListener('change', function(e) {
+		if (e.target == name) {
+			let num = e.target.getAttribute('data-length');
+			if (name.value.length < num) {
+				name.style.border = falsy;
+				n_err.innerHTML = name_error;
+			} 
+			else {
+				name.style.border = truth;
+				n_err.innerHTML = '';
+			}
+		}
+		if (e.target == age) {
+			let check = e.target.getAttribute('data-regx');
+			if (!date_regex.test(age.value)) {
+				age.style.border = falsy;
+				a_err.innerHTML = age_error;
+			}
+			else {
+				age.style.border = truth;
+				a_err.innerHTML = '';
+			}
+		}
+	});
+
+
+//===========================================//
+// Output date
+//===========================================//	
+	
+	function out() {
+		let today = new Date();
+		let currentYear = today.getFullYear();
+
+		let bornDate = new Date(reverseDate(getCookie("age")));
+		let bd_Month = bornDate.getMonth();
+		let bd_Day = bornDate.getDate();
+		let bd_Millisecond = bornDate.getTime();
+
+		let endDate = new Date(currentYear, bd_Month, bd_Day);
+
+		if (endDate - today < 0) {
+			endDate = new Date(currentYear + 1, bd_Month, bd_Day);
+		}
+
+		today = Math.floor((endDate-today)/1000);
+
+		let tsec=today%60; today=Math.floor(today/60); if(tsec<10)tsec='0'+tsec;
+		let tmin=today%60; today=Math.floor(today/60); if(tmin<10)tmin='0'+tmin;
+		let thour=today%24; today=Math.floor(today/24);
+
+		let congr = '';
+		if (endDate.getDate() == new Date().getDate() && endDate.getMonth() == new Date().getMonth()) {
+			congr = `Здравствуйте, ${getCookie('name')}!` + '<br>' +
+			'Поздравляем! Сегодня Ваш День Рождения!';
+		}
+
+		let dayText;
+		let arr_dayText = (today + '').split('');
+		if (arr_dayText[arr_dayText.length-1] == 1) {
+			dayText = 'день';
+		} 
+		else if (arr_dayText[arr_dayText.length-1] == 2 || arr_dayText[arr_dayText.length-1] == 3 || arr_dayText[arr_dayText.length-1] == 4) {
+			dayText = 'дня';
+		}
+		else {
+			dayText = 'дней';
+		}
+
+		let hourText;
+		let arr_hourText = (thour + '').split('');
+		if (arr_hourText[arr_hourText.length-1] == 1) {
+			hourText = 'час';
+		} 
+		else if (arr_hourText[arr_hourText.length-1] == 2 || arr_hourText[arr_hourText.length-1] == 3 || arr_hourText[arr_hourText.length-1] == 4) {
+			hourText = 'часа';
+		}
+		else {
+			hourText = 'часов';
+		}
+
+		let minText;
+		let arr_minText = (tmin + '').split('');
+		if (arr_minText[arr_minText.length-1] == 1) {
+			minText = 'минута';
+		} 
+		else if (arr_minText[arr_minText.length-1] == 2 || arr_minText[arr_minText.length-1] == 3 || arr_minText[arr_minText.length-1] == 4) {
+			minText = 'минуты';
+		}
+		else {
+			minText = 'минут';
+		}
+
+		let secText;
+		let arr_secText = (tsec + '').split('');
+		if (arr_secText[arr_secText.length-1] == 1) {
+			secText = 'секунда';
+		} 
+		else if (arr_secText[arr_secText.length-1] == 2 || arr_secText[arr_secText.length-1] == 3 || arr_secText[arr_secText.length-1] == 4) {
+			secText = 'секунды';
+		}
+		else {
+			secText = 'секунд';
+		}
+		
+		let timestr = `Здравствуйте, ${getCookie('name')}!` + '<br>' + 
+		`До Вашего Дня Рождения:`  + '<br>' + 
+		`${today} ${dayText} ${thour} ${hourText} ${tmin} ${minText} ${tsec} ${secText}`;
+
+		if (congr) {
+			timestr = congr + '<br>' + 
+			'До следующего:'+ '<br>' + 
+		`${today} ${dayText} ${thour} ${hourText} ${tmin} ${minText} ${tsec} ${secText}`;
+		}
+		output.innerHTML = timestr;
+	}
+
+/* 
+	deleteCookie('age');
+	deleteCookie('name');
+*/
+	</script>
+</body>
+</html>

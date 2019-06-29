@@ -1,0 +1,200 @@
+body {
+	/* background: royalblue;
+	background: #f5e09d; */
+} 
+#WG {
+	position: fixed;
+	top: 5px;
+	left: 5px;
+}
+.weatherWidget {
+	position: relative;
+	font-family: Roboto, Arial;
+	border-radius: 10px;
+	transition: .5s ease-in-out;
+}
+.weatherWidget__close {
+	position: absolute;
+	font-family: Roboto, Arial;
+	font-size: .6em;
+	text-align: right;
+	color: gray;
+	width: 100%;
+	z-index: 100;
+	border-radius: 10px;
+}
+.weatherWidget__close a {
+	display: inline-block;
+	width: 20px;
+	padding-top: 5px;
+	padding-right: 10px;
+	cursor: pointer;
+	z-index: 100;
+}
+.weatherWidget__close a:hover {
+	color: #c00;
+}
+.weatherWidget__tabs {
+	/* background: rgba(20, 7, 92, .1); */
+	background: #F2C14E; /* Для браузеров, которые не поддерживают градиенты */
+    background: -webkit-linear-gradient(150deg, #F2C14E, #F78154);
+    background: -o-linear-gradient(150deg, #F2C14E, #F78154);
+    background: linear-gradient(240deg, #F2C14E, #F78154); /* Для Safari 5.1 - 6.0 */ /* Для Opera 11.1 - 12.0 */ /* Для Firefox 3.6 - 15 */ /* Стандартный синтаксис */
+	display: table;
+	box-shadow: 3px 0 12px 0 rgba(100,100,100,.2);
+	cursor: pointer; 
+	border-radius: 10px 10px 0 0;
+}
+.weatherWidget__tabs div {
+	display: table-cell;
+	border-bottom: .4px solid rgba(41, 68, 128, .4);
+	padding-top: 8px;
+	padding-bottom: 5px;
+	height: 26px;
+	width: 150px;
+	font-size: .6em;
+	font-family: 'M PLUS 1p', sans-serif;
+	text-align: center;
+	vertical-align: middle;
+	transform: scaleX(1);
+	border-radius: 10px 10px 0 0;
+	/* border: .4px solid rgba(41, 68, 128, .2); */
+}
+.weatherWidget__tabs div:hover {
+	background: rgba(255,255,255,.2);
+}
+.weatherWidget__tabs h2 {
+	margin: 0;
+}
+.clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.weatherWidget__oneDayTab, .weatherWidget__threeDaysTab {
+	font-family: 'M PLUS 1p', sans-serif;
+	display: flex;
+	padding: 6px;
+	flex-wrap: wrap;
+	width: 300px;
+	box-sizing: border-box;
+	justify-content: space-around;
+	background: #F2C14E; /* Для браузеров, которые не поддерживают градиенты */
+    background: -webkit-linear-gradient(150deg, #F2C14E, #F78154);
+    background: -o-linear-gradient(150deg, #F2C14E, #F78154);
+    background: linear-gradient(240deg, #F2C14E, #F78154); /* Для Safari 5.1 - 6.0 */ /* Для Opera 11.1 - 12.0 */ /* Для Firefox 3.6 - 15 */ /* Стандартный синтаксис */
+	transition: all .6s ease-in-out;
+	transform-origin: 50% 0;
+	border-radius: 0 0 10px 10px; 
+}
+.weatherWidget__oneDayTab h2, .weatherWidget__threeDaysTab h2 {
+	display: block;
+	width: 100%;
+	font-size: 1.2em;
+	text-align: center;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+@keyframes bounce {
+	0% {
+		transform: scale(1);
+		transform: rotate(0deg);
+	}
+	25% {
+		transform: rotate(3deg);
+	}
+	50% {
+		transform: rotate(0deg);
+		transform: scale(1.1);
+	}
+	75% {
+		transform: rotate(-3deg);
+	}
+	100% {
+		transform: rotate(0deg);
+		transform: scale(1);
+	}
+}
+.image {
+	animation: bounce 3s linear infinite;
+}
+.weatherWidget__oneDayTab div {
+	width: 50%;
+	text-align: center;
+}
+.weatherWidget__oneDayTab .temp {
+	font-size: 1.6em;
+	padding-top: 10px;
+}
+.weatherWidget__oneDayTab .image {
+	transform: scale(1.2);
+}
+.weatherWidget__oneDayTab .descr {
+	text-transform: capitalize;
+	margin-top: -4px;
+}
+.weatherWidget__oneDayTab .wind {
+	font-size: 1em;
+	margin-top: -4px;
+}
+
+.weatherWidget__threeDaysTab > div {
+	width: calc(100% / 3);
+}
+.weatherWidget__threeDaysTab > div:hover {
+	background: rgba(255,255,255,.2);
+}
+.weatherWidget__threeDaysTab .date {
+	font-size: .6em;
+	text-align: center;
+}
+.weatherWidget__threeDaysTab .temp {
+	font-size: 1.1em;
+	text-align: center;
+}
+.weatherWidget__threeDaysTab .descr {
+	font-size: .8em;
+	text-align: center;
+	text-transform: capitalize;
+}
+.weatherWidget__threeDaysTab .image {
+	text-align: center;
+	transform: scale(1.2);
+	margin-left: -6px;
+}
+.weatherWidget__threeDaysTab .wind {
+	position: static;
+	font-size: .7em;
+	margin-top: -15px;
+	text-align: center;
+}
+.weatherWidget__threeDaysTab {
+	position: absolute;
+	top: 40px;
+	left: 0;
+	width: 100%;
+}
+.small-icon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: .5s ease-in-out;
+}
+.small-icon img {
+	width: 40px;
+	height: 40px;
+	opacity: .8;
+	box-shadow: 1px 1px 5px 0 rgba(100,100,100,.2), -1px -1px 5px 0 rgba(100,100,100,.2);
+	transition: .5s ease-in-out;
+}
+.hide {
+	opacity: 0;
+	visibility: 0;
+	transform: scale(0);
+}
+.highlite {
+	background: rgba(255,255,255,.2);
+}
+.hide-tab {
+	transform: scaleY(0);
+}
