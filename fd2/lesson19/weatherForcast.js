@@ -137,13 +137,14 @@ function WheatherWidget() {
 	    };
 
 
+	    
 	    this.events = function() {
+			let oneDayTab = field.querySelector('.weatherWidget__oneDayTab');
+			let threeDaysTab = field.querySelector('.weatherWidget__threeDaysTab');
 			let close = field.querySelector('.weatherWidget__close a');
 			let widget = field.querySelector('.weatherWidget');
 			let oneDayButton = field.querySelector('.weatherWidget__oneDay');
 			let threeDaysButton = field.querySelector('.weatherWidget__threeDays');
-			let oneDayTab = field.querySelector('.weatherWidget__oneDayTab');
-			let threeDaysTab = field.querySelector('.weatherWidget__threeDaysTab');
 			let smallIcon = field.querySelector('.small-icon');
 
 
@@ -177,6 +178,9 @@ function WheatherWidget() {
 
 		this.dragAndDrop = function() {
 
+			let oneDayTab = field.querySelector('.weatherWidget__oneDayTab');
+			let threeDaysTab = field.querySelector('.weatherWidget__threeDaysTab');
+
 			function getCoords(elem) { 
 				let box = elem.getBoundingClientRect();
 
@@ -186,7 +190,10 @@ function WheatherWidget() {
 				};
 			};
 
-			field.onmousedown = function(e){
+			oneDayTab.addEventListener('mousedown', move);
+			threeDaysTab.addEventListener('mousedown', move);
+
+			function move(e){
 				let coords = getCoords(field);
 				let shiftX = e.pageX - coords.left;
 				let shiftY = e.pageY - coords.top;
@@ -195,7 +202,7 @@ function WheatherWidget() {
 				document.body.appendChild(field);
 				moveAt(e);
 
-				field.style.zIndex = 1000; // над другими элементами
+				field.style.zIndex = 1000;
 
 				function moveAt(e) {
 					field.style.left = e.pageX - shiftX + 'px';
@@ -206,21 +213,24 @@ function WheatherWidget() {
 				    moveAt(e);
 				};
 
-				field.onmouseup = function() {
+				this.onmouseup = function() {
 				    document.onmousemove = null;
 				    field.onmouseup = null;
 				};
-			}
+			};
 				
-			field.ondragstart = function() {
+			oneDayTab.ondragstart = function() {
+				return false;
+			};
+			threeDaysTab.ondragstart = function() {
 				return false;
 			};
 		};
 
 	    this.getWeather = function() {
 			this.createGridOfWidget();
-			this.events();
 			this.dragAndDrop();
+			this.events();
 			this.getOneDayWheather(625144);
 			this.getThreeDaysWheather(625144);
 		};
