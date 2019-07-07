@@ -180,6 +180,12 @@ function WheatherWidget() {
 
 			let oneDayTab = field.querySelector('.weatherWidget__oneDayTab');
 			let threeDaysTab = field.querySelector('.weatherWidget__threeDaysTab');
+			let smallIcon = field.querySelector('.small-icon');
+
+			oneDayTab.addEventListener('mousedown', move);
+			threeDaysTab.addEventListener('mousedown', move);
+			smallIcon.addEventListener('mousedown', move);
+
 
 			function getCoords(elem) { 
 				let box = elem.getBoundingClientRect();
@@ -189,9 +195,6 @@ function WheatherWidget() {
 				    left: box.left + pageXOffset
 				};
 			};
-
-			oneDayTab.addEventListener('mousedown', move);
-			threeDaysTab.addEventListener('mousedown', move);
 
 			function move(e){
 				let coords = getCoords(field);
@@ -223,6 +226,9 @@ function WheatherWidget() {
 				return false;
 			};
 			threeDaysTab.ondragstart = function() {
+				return false;
+			};
+			smallIcon.ondragstart = function() {
 				return false;
 			};
 		};
