@@ -6,7 +6,10 @@ function WheatherWidget() {
 			field = document.createElement('div');
 			field.id = 'WG';
 			let string = `	
-				<div class="small-icon hide"><a href="#" title="открыть виджет погоды"><img src="weather-icon.png"></a></div>
+				<div class="small-icon hide">
+					<div class="dragAndDrop_handle"></div>
+					<a href="#" title="открыть виджет погоды"><img src="weather-icon.png"></a>
+				</div>
 
 				<div class="weatherWidget">
 					<div class="weatherWidget__close"><a>X</a></div>
@@ -88,7 +91,7 @@ function WheatherWidget() {
 			let wind = field.querySelector('.weatherWidget__oneDayTab .wind');
 
 			location.innerHTML = data.name;
-			temp.innerHTML = data.main.temp + "&#8451;";
+			temp.innerHTML = Math.floor(data.main.temp) + "&#8451;";
 			descr.innerHTML = data.weather[0].description;
 			image.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="icon">`;
 			wind.innerHTML = '&#9780; ' + data.wind.speed + ' км/ч';
@@ -118,19 +121,19 @@ function WheatherWidget() {
 			location.innerHTML = data.city.name;
 
 			date1.innerHTML = data.list[1].dt_txt.substr(0, 10);
-			temp1.innerHTML = data.list[1].main.temp + "&#8451;";
+			temp1.innerHTML = Math.floor(data.list[1].main.temp) + "&#8451;";
 			descr1.innerHTML = data.list[1].weather[0].description;
 			image1.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.list[1].weather[0].icon}.png" alt="icon">`;
 			wind1.innerHTML = '&#9780; ' + data.list[1].wind.speed + ' км/ч';
 
 			date2.innerHTML = data.list[9].dt_txt.substr(0, 10);
-			temp2.innerHTML = data.list[9].main.temp + "&#8451;";
+			temp2.innerHTML = Math.floor(data.list[9].main.temp) + "&#8451;";
 			descr2.innerHTML = data.list[9].weather[0].description;
 			image2.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.list[9].weather[0].icon}.png" alt="icon">`;
 			wind2.innerHTML = '&#9780; ' + data.list[9].wind.speed + ' км/ч';
 
 			date3.innerHTML = data.list[17].dt_txt.substr(0, 10);
-			temp3.innerHTML = data.list[17].main.temp + "&#8451;";
+			temp3.innerHTML = Math.floor(data.list[17].main.temp) + "&#8451;";
 			descr3.innerHTML = data.list[17].weather[0].description;
 			image3.innerHTML = `<img src="http://openweathermap.org/img/wn/${data.list[17].weather[0].icon}.png" alt="icon">`;
 			wind3.innerHTML = '&#9780; ' + data.list[17].wind.speed + ' км/ч';
@@ -155,7 +158,7 @@ function WheatherWidget() {
 				smallIcon.classList.remove('hide');
 			});
 
-			smallIcon.addEventListener('dblclick', function(e){
+			smallIcon.addEventListener('click', function(e){
 				e.preventDefault();
 				smallIcon.classList.add('hide');
 				widget.classList.remove('hide');
@@ -180,7 +183,7 @@ function WheatherWidget() {
 
 			let oneDayTab = field.querySelector('.weatherWidget__oneDayTab');
 			let threeDaysTab = field.querySelector('.weatherWidget__threeDaysTab');
-			let smallIcon = field.querySelector('.small-icon');
+			let smallIcon = field.querySelector('.small-icon .dragAndDrop_handle');
 
 			oneDayTab.addEventListener('mousedown', move);
 			threeDaysTab.addEventListener('mousedown', move);
@@ -202,9 +205,7 @@ function WheatherWidget() {
 				let shiftY = e.pageY - coords.top;
 
 				field.style.position = 'absolute';
-				document.body.appendChild(field);
-				moveAt(e);
-
+				document.body.appendChild(field);                                  
 				field.style.zIndex = 1000;
 
 				function moveAt(e) {
