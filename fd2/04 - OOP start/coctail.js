@@ -27,7 +27,7 @@ class HashStorage {
 
 /* хранилище коктейлей */
 let coctails = {
-	'Апероль Шприц' : 	{},
+	'Апероль' : 	{},
 	'Пиранья' 		: 	{},
 	'Оазис' 		: 	{}
 };
@@ -98,8 +98,8 @@ toGetDrinkReceipt.addEventListener('click', function() {
 	drink = drink.charAt(0).toUpperCase() + drink.substr(1).toLowerCase();
 
 	let res = coctailsStorage.getValue(drink);
-	console.log(res);
-	console.log(typeof res); //object
+// 	console.log(res);
+// 	console.log(typeof res); //object
 
 	if (res) {
 		let arr = [];
@@ -155,16 +155,3 @@ receiptInput.addEventListener('click', function() {
 	console.log(newCoctailName);
 	console.log(receiptValues);
 });
-
-
-console.log(`Коктейль B-52
-Напиток:
-Алкогольный
-Необходмые ингриденты:
-кофейный ликер: 20 мл
-сливочный ликер: 20 мл
-апельсиновый ликер: 20 мл
-Приготовление:
-1. Налить в стопку кофейный ликер. 
-2. Далее по лезвию ножа или тыльной стороне ложки медленно добавить сливочный ликер поверх кофейного. 
-3. Этим же методом налить апельсиновый ликер.`);
